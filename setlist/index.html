@@ -180,6 +180,9 @@ kbd { font-family: var(--ui); border: 1px solid var(--line); border-bottom-width
 
 <main id="app" aria-live="polite"></main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../sync-config.js"></script>
+<script src="../sync.js"></script>
 <script src="vl1.js"></script>
 <script src="vl2.js"></script>
 <script src="vl3.js"></script>
@@ -364,7 +367,14 @@ const VL_LEN = 16;
 const KEY = "setlist-v1";
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
 let S = Object.assign({ p: {}, read: [], tab: "quiz" }, load());
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} if (window.Sync) Sync.push(); }
+function mountAccount() {
+  if (!window.Sync || !Sync.enabled) return;
+  const d = document.createElement("div");
+  app.appendChild(d);
+  Sync.renderInto(d);
+}
+
 
 const prog = id => S.p[id] || { box: 0, seen: 0, ok: 0, lastOk: null };
 const mastered = id => prog(id).box >= 2;
@@ -433,6 +443,7 @@ function renderHome() {
       </ol>
     </section>
     <button class="reset" id="reset">Remettre ma progression à zéro</button>`;
+  mountAccount();
   bindTabs();
   document.getElementById("go-mix").onclick = () => start(pick(ALL, QUIZ_LEN), "Quiz mélangé");
   document.getElementById("go-rev").onclick = () => start(shuffle(toReview().map(x => x.id)).slice(0, QUIZ_LEN), "Révision");
@@ -474,6 +485,7 @@ function renderAnec() {
       <span class="seen-note num">${A.i + 1} / ${list.length} · ${S.read.length} découvertes sur ${ANEC.length}</span>
     </div>
     <p class="hint">Raccourcis : <kbd>←</kbd> <kbd>→</kbd> pour naviguer, <kbd>R</kbd> pour une anecdote au hasard.</p>`;
+  mountAccount();
   bindTabs();
   app.querySelectorAll("[data-dec]").forEach(b => b.onclick = () => { A.dec = b.dataset.dec; A.i = 0; renderAnec(); });
   document.getElementById("prev").onclick = () => moveAnec(-1);
@@ -520,6 +532,7 @@ function renderVLHome() {
       <button class="btn btn-primary" id="go-vl">Lancer une série de ${VL_LEN}</button>
       <button class="btn btn-ghost" id="go-vlrev" ${rev ? "" : "disabled"}>Revoir mes erreurs ${rev ? `<span class="tag num">${rev}</span>` : ""}</button>
     </div>`;
+  mountAccount();
   bindTabs();
   document.getElementById("go-vl").onclick = startVL;
   document.getElementById("go-vlrev").onclick = () => start(shuffle(vlReview().map(x => x.id)).slice(0, VL_LEN), "Révision vrai ou légende", "vl");
@@ -637,6 +650,19 @@ document.addEventListener("keydown", e => {
   }
 });
 
+if (window.Sync) Sync.init({
+  app: "setlist",
+  getState: () => S,
+  setState: s => {
+    S = Object.assign({ p: {}, read: [], tab: "quiz" }, s);
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+    if (!Q) renderHome();
+  },
+  merge: (l, r) => Object.assign({}, l, {
+    p: Sync.mergeProgress(l.p, r.p),
+    read: Array.from(new Set([...(l.read || []), ...(r.read || [])])),
+  }),
+});
 renderHome();
 </script>
 

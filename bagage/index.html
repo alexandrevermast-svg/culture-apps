@@ -146,6 +146,9 @@ kbd { font-family: var(--ui); border: 1px solid var(--line); border-bottom-width
 
 <main id="app" aria-live="polite"></main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../sync-config.js"></script>
+<script src="../sync.js"></script>
 <script>
 // Chaque question : [énoncé, [bonne réponse, leurre, leurre, leurre], explication]
 const CATS = [
@@ -243,7 +246,14 @@ function load() {
   try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
 }
 let S = Object.assign({ p: {}, streak: 0, lastDay: null }, load());
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} if (window.Sync) Sync.push(); }
+function mountAccount() {
+  if (!window.Sync || !Sync.enabled) return;
+  const d = document.createElement("div");
+  app.appendChild(d);
+  Sync.renderInto(d);
+}
+
 
 // Boîtes de Leitner : 0 = jamais vue / ratée, 4 = maîtrisée
 const prog = id => S.p[id] || { box: 0, seen: 0, ok: 0, lastOk: null };
@@ -315,6 +325,7 @@ function renderHome() {
 
     <button class="reset" id="reset">Remettre ma progression à zéro</button>
   `;
+  mountAccount();
   document.getElementById("go-mix").onclick = () => start(pick(ALL, QUIZ_LEN), "Quiz mélangé");
   document.getElementById("go-rev").onclick = () => start(shuffle(toReview().map(x => x.id)).slice(0, QUIZ_LEN), "Révision");
   app.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => {
@@ -437,6 +448,20 @@ document.addEventListener("keydown", e => {
   else if (Q.answered && key === "enter" && document.activeElement?.id !== "next") { e.preventDefault(); next(); }
 });
 
+if (window.Sync) Sync.init({
+  app: "bagage",
+  getState: () => S,
+  setState: s => {
+    S = Object.assign({ p: {}, streak: 0, lastDay: null }, s);
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+    if (!Q) renderHome();
+  },
+  merge: (l, r) => {
+    const lDay = l.lastDay || "", rDay = r.lastDay || "";
+    const newer = rDay > lDay ? r : rDay < lDay ? l : ((r.streak || 0) > (l.streak || 0) ? r : l);
+    return Object.assign({}, l, { p: Sync.mergeProgress(l.p, r.p), streak: newer.streak || 0, lastDay: newer.lastDay || null });
+  },
+});
 renderHome();
 </script>
 
