@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EEF0EA">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Bagage culturel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: une colonne étroite type fiche de révision ; accueil = tableau de bord, quiz = une carte question plein focus */
+:root {
+  --bg: #EEF0EA;
+  --surface: #F9FAF6;
+  --ink: #1C2B25;
+  --muted: #5C6B63;
+  --line: #D3D8CE;
+  --accent: #E3A008;
+  --accent-ink: #8A5F00;
+  --good: #2F7D4F;
+  --good-bg: #DCEFE2;
+  --bad: #B83A2E;
+  --bad-bg: #F6DEDA;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --ui: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121A16; --surface: #1A241F; --ink: #E8EDE6; --muted: #9AA8A0; --line: #2C3A33;
+    --accent: #F0B429; --accent-ink: #F0B429; --good: #5CC08A; --good-bg: #183A27; --bad: #F07466; --bad-bg: #3F1E1A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121A16; --surface: #1A241F; --ink: #E8EDE6; --muted: #9AA8A0; --line: #2C3A33;
+  --accent: #F0B429; --accent-ink: #F0B429; --good: #5CC08A; --good-bg: #183A27; --bad: #F07466; --bad-bg: #3F1E1A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+#app { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Accueil */
+.masthead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.masthead h1 { font-size: clamp(34px, 8vw, 52px); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+.masthead h1 span { color: var(--accent); }
+.streak { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--muted); }
+.streak b { color: var(--ink); font-size: 22px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+.stat { padding: 14px 4px; display: flex; flex-direction: column; gap: 2px; }
+.stat + .stat { border-left: 1px solid var(--line); padding-left: 14px; }
+.stat b { font-family: var(--display); font-size: 30px; font-weight: 800; line-height: 1.1; }
+.stat span { font-size: 13px; color: var(--muted); }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+.fact p { margin: 0; font-family: var(--body); font-size: 18px; line-height: 1.55; }
+.fact .src { font-size: 13px; color: var(--muted); font-family: var(--ui); }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { border: 0; border-radius: 6px; padding: 14px 20px; font-weight: 600; font-size: 16px; display: inline-flex; align-items: center; gap: 10px; }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-primary:hover { background: var(--accent); color: #1C2B25; }
+.btn-ghost { background: transparent; border: 1.5px solid var(--ink); }
+.btn-ghost:hover { background: var(--surface); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn .tag { font-size: 13px; background: var(--accent); color: #1C2B25; border-radius: 99px; padding: 1px 8px; }
+.cats-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.cats-head h2 { font-size: 22px; }
+.cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cat { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.cat:hover { border-color: var(--ink); }
+.cat-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.cat-name { font-weight: 600; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+.cat-count { font-size: 13px; color: var(--muted); }
+.bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--ink); border-radius: 99px; transition: width .4s; }
+.legend { font-size: 13px; color: var(--muted); }
+.reset { background: none; border: 0; color: var(--muted); font-size: 13px; text-decoration: underline; padding: 0; align-self: flex-start; }
+
+/* Quiz */
+.qtop { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.quit { background: none; border: 0; color: var(--muted); font-weight: 600; padding: 4px 0; }
+.quit:hover { color: var(--ink); }
+.progress { display: flex; gap: 4px; flex: 1; max-width: 320px; }
+.progress i { flex: 1; height: 6px; border-radius: 99px; background: var(--line); }
+.progress i.ok { background: var(--good); }
+.progress i.ko { background: var(--bad); }
+.progress i.cur { background: var(--ink); }
+.qcard { display: flex; flex-direction: column; gap: 22px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.qtext { font-size: clamp(24px, 5.5vw, 32px); font-weight: 600; line-height: 1.2; letter-spacing: -.01em; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt { text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 6px; padding: 14px 16px; display: flex; gap: 14px; align-items: center; font-size: 17px; transition: border-color .15s, background .15s; }
+.opt:hover:not([disabled]) { border-color: var(--ink); }
+.opt .k { width: 28px; height: 28px; flex: none; border-radius: 4px; border: 1px solid var(--line); display: grid; place-items: center; font-size: 13px; font-weight: 600; color: var(--muted); }
+.opt[disabled] { cursor: default; }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.right .k { background: var(--good); color: var(--surface); border-color: var(--good); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt.wrong .k { background: var(--bad); color: var(--surface); border-color: var(--bad); }
+.opt.dim { opacity: .55; }
+.expl { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; display: flex; flex-direction: column; gap: 6px; animation: rise .3s ease-out; }
+.expl .verdict { font-weight: 800; font-family: var(--display); font-size: 18px; }
+.expl .verdict.ok { color: var(--good); }
+.expl .verdict.ko { color: var(--bad); }
+.expl p { margin: 0; font-family: var(--body); font-size: 17px; line-height: 1.6; max-width: 62ch; }
+.next-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.hint { font-size: 13px; color: var(--muted); }
+kbd { font-family: var(--ui); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font-size: 12px; }
+
+/* Résultats */
+.score { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.score b { font-family: var(--display); font-size: clamp(64px, 16vw, 96px); font-weight: 800; line-height: .9; letter-spacing: -.03em; }
+.score span { font-size: 18px; color: var(--muted); }
+.verdict-line { font-family: var(--body); font-size: 19px; margin: 0; }
+.recap { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.recap li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.recap .m { font-weight: 800; font-size: 18px; line-height: 1.3; }
+.recap .m.ok { color: var(--good); }
+.recap .m.ko { color: var(--bad); }
+.recap .q { font-weight: 600; }
+.recap .a { font-size: 14px; color: var(--muted); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+@media (max-width: 460px) {
+  .cats { grid-template-columns: minmax(0, 1fr); }
+  .stat b { font-size: 24px; }
+  .stat + .stat { padding-left: 10px; }
+  .actions .btn { flex: 1 1 100%; justify-content: center; }
+}
+</style>
+
+<main id="app" aria-live="polite"></main>
+
+<script>
+// Chaque question : [énoncé, [bonne réponse, leurre, leurre, leurre], explication]
+const CATS = [
+  { id: "hist", name: "Histoire", color: "#B0623A", qs: [
+    ["En quelle année la Bastille a-t-elle été prise ?", ["1789", "1792", "1774", "1815"], "Le 14 juillet 1789. La forteresse ne détenait alors que sept prisonniers, mais elle symbolisait l'arbitraire royal."],
+    ["Qui fut le premier empereur romain ?", ["Auguste", "Jules César", "Néron", "Caligula"], "Octave prend le titre d'Auguste en 27 av. J.-C. Jules César, assassiné en 44 av. J.-C., n'a jamais été empereur : il était dictateur."],
+    ["En quelle année le mur de Berlin est-il tombé ?", ["1989", "1991", "1985", "1961"], "Le 9 novembre 1989. Il avait été construit en 1961 et a séparé la ville pendant 28 ans."],
+    ["Quelle civilisation a bâti le Machu Picchu ?", ["Les Incas", "Les Aztèques", "Les Mayas", "Les Olmèques"], "La cité a été construite au XVe siècle dans les Andes péruviennes. Elle a été révélée au grand public par Hiram Bingham en 1911."],
+    ["Qui est le principal rédacteur de la Déclaration d'indépendance américaine ?", ["Thomas Jefferson", "George Washington", "Benjamin Franklin", "John Adams"], "Jefferson rédige le texte adopté le 4 juillet 1776. Il deviendra le troisième président des États-Unis."],
+    ["En quelle année a eu lieu la bataille d'Hastings ?", ["1066", "1215", "987", "1453"], "Guillaume, duc de Normandie, y bat le roi Harold et devient roi d'Angleterre. On le surnomme depuis « le Conquérant »."],
+    ["Quel pharaon a été retrouvé dans un tombeau presque intact en 1922 ?", ["Toutânkhamon", "Ramsès II", "Khéops", "Akhenaton"], "Howard Carter découvre la tombe dans la Vallée des Rois. Toutânkhamon est mort vers 19 ans, ce qui explique en partie la modestie de son règne."],
+    ["Qui a été la première femme à recevoir un prix Nobel ?", ["Marie Curie", "Irène Joliot-Curie", "Bertha von Suttner", "Rosalind Franklin"], "Marie Curie reçoit le Nobel de physique en 1903, puis celui de chimie en 1911. Elle reste la seule personne primée dans deux sciences différentes."],
+  ]},
+  { id: "geo", name: "Géographie", color: "#3E7F8C", qs: [
+    ["Quel est le plus long fleuve de France ?", ["La Loire", "La Seine", "Le Rhône", "La Garonne"], "La Loire mesure environ 1 006 km et coule entièrement en France. Le Rhône est plus puissant, mais une partie de son cours est en Suisse."],
+    ["Quelle est la capitale de l'Australie ?", ["Canberra", "Sydney", "Melbourne", "Perth"], "Canberra a été choisie en 1908 comme compromis entre Sydney et Melbourne, qui se disputaient le titre."],
+    ["Quel est le plus haut sommet d'Afrique ?", ["Le Kilimandjaro", "Le mont Kenya", "Le Ras Dashen", "Le mont Stanley"], "Le Kilimandjaro culmine à 5 895 m en Tanzanie. C'est un volcan isolé, pas une montagne de chaîne."],
+    ["Quel pays compte le plus de fuseaux horaires ?", ["La France", "La Russie", "Les États-Unis", "La Chine"], "Grâce à ses territoires d'outre-mer, la France en compte 12 (13 avec la Terre Adélie). La Russie en a 11, et la Chine un seul officiel."],
+    ["Quel est le plus grand désert chaud du monde ?", ["Le Sahara", "Le Kalahari", "Le désert d'Arabie", "Le Gobi"], "Le Sahara couvre environ 9 millions de km². Le plus grand désert tout court est l'Antarctique, car un désert se définit par sa faible pluviométrie."],
+    ["Dans quel pays se trouve Tombouctou ?", ["Le Mali", "Le Niger", "La Mauritanie", "Le Burkina Faso"], "Tombouctou fut un grand centre intellectuel du XVe et XVIe siècle, célèbre pour ses manuscrits et ses mosquées en terre."],
+    ["Où se trouve le point le plus bas des terres émergées ?", ["Au bord de la mer Morte", "Dans la vallée de la Mort", "Dans la dépression de Qattara", "Au bord de la mer Caspienne"], "Les rives de la mer Morte sont à environ 430 m sous le niveau de la mer, et ce niveau baisse d'environ un mètre par an."],
+    ["Quelle est la capitale du Canada ?", ["Ottawa", "Toronto", "Montréal", "Vancouver"], "La reine Victoria choisit Ottawa en 1857, notamment parce qu'elle se situe à la frontière entre l'Ontario anglophone et le Québec francophone."],
+  ]},
+  { id: "sci", name: "Sciences", color: "#5B6FB5", qs: [
+    ["Quel est le symbole chimique de l'or ?", ["Au", "Or", "Ag", "Go"], "Au vient du latin aurum. Ag, c'est l'argent (argentum)."],
+    ["Quelle est la planète la plus chaude du système solaire ?", ["Vénus", "Mercure", "Mars", "Jupiter"], "Vénus atteint environ 465 °C en surface. Mercure est plus proche du Soleil, mais Vénus piège la chaleur sous une atmosphère très dense de CO₂."],
+    ["Combien d'os compte le squelette d'un adulte ?", ["206", "186", "246", "312"], "Un nouveau-né en a environ 300 : plusieurs os se soudent pendant la croissance, notamment au crâne et au bassin."],
+    ["Quelle est approximativement la vitesse de la lumière dans le vide ?", ["300 000 km/s", "30 000 km/s", "3 000 000 km/s", "1 080 km/s"], "Plus précisément 299 792 km/s. En une seconde, la lumière ferait plus de sept fois le tour de la Terre."],
+    ["Qui a formulé la théorie de l'évolution par sélection naturelle ?", ["Charles Darwin", "Jean-Baptiste Lamarck", "Gregor Mendel", "Louis Pasteur"], "Darwin publie L'Origine des espèces en 1859. Alfred Russel Wallace était arrivé à la même idée de son côté."],
+    ["Quel élément de la cellule produit l'essentiel de son énergie ?", ["La mitochondrie", "Le noyau", "Le ribosome", "L'appareil de Golgi"], "Les mitochondries ont leur propre ADN. Elles descendraient de bactéries absorbées par une cellule il y a près de deux milliards d'années."],
+    ["Quel gaz est le plus abondant dans l'air ?", ["L'azote", "L'oxygène", "Le dioxyde de carbone", "L'argon"], "L'air contient environ 78 % d'azote et 21 % d'oxygène. Le CO₂ ne représente qu'environ 0,04 %."],
+    ["Combien de temps la lumière du Soleil met-elle pour atteindre la Terre ?", ["Environ 8 minutes", "Environ 8 secondes", "Environ 1 heure", "Environ 1 seconde"], "Environ 8 minutes et 20 secondes. Quand on regarde le Soleil, on le voit donc tel qu'il était quelques minutes plus tôt."],
+  ]},
+  { id: "arts", name: "Arts & littérature", color: "#A04F86", qs: [
+    ["Qui a peint La Joconde ?", ["Léonard de Vinci", "Raphaël", "Michel-Ange", "Titien"], "Elle est au Louvre. Volée en 1911 par Vincenzo Peruggia, elle n'a été retrouvée que deux ans plus tard, ce qui a fait sa célébrité mondiale."],
+    ["Qui a écrit Les Misérables ?", ["Victor Hugo", "Émile Zola", "Honoré de Balzac", "Alexandre Dumas"], "Le roman paraît en 1862, alors que Hugo est en exil à Guernesey."],
+    ["Qui a peint Guernica ?", ["Pablo Picasso", "Salvador Dalí", "Joan Miró", "Francisco de Goya"], "Picasso peint la toile en 1937 après le bombardement de la ville basque. Elle est exposée au musée Reina Sofía de Madrid."],
+    ["Quel mouvement tire son nom d'un tableau de Claude Monet ?", ["L'impressionnisme", "Le fauvisme", "Le pointillisme", "Le symbolisme"], "Un critique moque le tableau Impression, soleil levant (1872). Les peintres reprennent le mot à leur compte."],
+    ["Qui est l'auteur du roman 1984 ?", ["George Orwell", "Aldous Huxley", "Ray Bradbury", "H. G. Wells"], "Publié en 1949, le livre a donné naissance à l'expression « Big Brother »."],
+    ["Qui a sculpté Le Penseur ?", ["Auguste Rodin", "Camille Claudel", "Antoine Bourdelle", "Aristide Maillol"], "À l'origine, la figure représentait Dante méditant au sommet de La Porte de l'Enfer."],
+    ["Quel était le vrai nom de Molière ?", ["Jean-Baptiste Poquelin", "François-Marie Arouet", "Jean de La Fontaine", "Pierre Corneille"], "François-Marie Arouet, c'est Voltaire. Le français est parfois appelé « la langue de Molière »."],
+    ["Dans quelle ville se trouve le musée du Prado ?", ["Madrid", "Barcelone", "Lisbonne", "Séville"], "Ouvert en 1819, il conserve notamment Les Ménines de Velázquez et les « peintures noires » de Goya."],
+  ]},
+  { id: "mus", name: "Musique", color: "#C08A1E", qs: [
+    ["Combien de symphonies Beethoven a-t-il achevées ?", ["9", "7", "12", "41"], "La Neuvième se termine par l'Ode à la joie, devenue l'hymne européen. Beethoven était alors presque totalement sourd. 41, c'est le nombre de symphonies de Mozart."],
+    ["Qui a composé Les Quatre Saisons ?", ["Antonio Vivaldi", "Jean-Sébastien Bach", "Georg Friedrich Haendel", "Arcangelo Corelli"], "Ce sont quatre concertos pour violon publiés en 1725. Chacun était accompagné d'un sonnet décrivant la saison."],
+    ["Combien de touches compte un piano standard ?", ["88", "76", "96", "64"], "52 touches blanches et 36 noires, sur un peu plus de sept octaves."],
+    ["Dans quelle ville Mozart est-il né ?", ["Salzbourg", "Vienne", "Munich", "Prague"], "Il naît en 1756 à Salzbourg, alors principauté indépendante, et meurt à Vienne en 1791 à 35 ans."],
+    ["De quel instrument jouait Miles Davis ?", ["La trompette", "Le saxophone", "Le piano", "La contrebasse"], "Son album Kind of Blue (1959) est l'album de jazz le plus vendu de l'histoire."],
+    ["Qui a composé le Boléro ?", ["Maurice Ravel", "Claude Debussy", "Erik Satie", "Camille Saint-Saëns"], "Créé en 1928 pour une ballerine, il répète le même thème en crescendo pendant environ quinze minutes."],
+    ["Dans quelle ville le jazz est-il principalement né ?", ["La Nouvelle-Orléans", "Chicago", "New York", "Memphis"], "Au début du XXe siècle, il naît du mélange du blues, du ragtime et des fanfares de la ville."],
+    ["De quelle région vient le tango ?", ["Le Río de la Plata (Argentine et Uruguay)", "L'Andalousie", "Cuba", "Le Brésil"], "Il naît à la fin du XIXe siècle dans les quartiers populaires de Buenos Aires et de Montevideo."],
+  ]},
+  { id: "cine", name: "Cinéma", color: "#3F8A5A", qs: [
+    ["En quelle année les frères Lumière organisent-ils la première projection publique payante ?", ["1895", "1878", "1903", "1912"], "Le 28 décembre 1895, au Salon indien du Grand Café, boulevard des Capucines à Paris."],
+    ["Qui a réalisé Le Fabuleux Destin d'Amélie Poulain ?", ["Jean-Pierre Jeunet", "Luc Besson", "Jacques Audiard", "Michel Gondry"], "Sorti en 2001, le film a attiré plus de 8 millions de spectateurs en France."],
+    ["Combien d'Oscars Titanic a-t-il remportés ?", ["11", "9", "14", "7"], "C'est le record, partagé avec Ben-Hur et Le Seigneur des anneaux : Le Retour du roi."],
+    ["Qui a réalisé Psychose ?", ["Alfred Hitchcock", "Stanley Kubrick", "Orson Welles", "Billy Wilder"], "Sorti en 1960. La célèbre scène de la douche dure trois minutes et a demandé une semaine de tournage."],
+    ["Quel est le premier long métrage d'animation de Disney ?", ["Blanche-Neige et les Sept Nains", "Pinocchio", "Fantasia", "Bambi"], "Sorti en 1937, on le surnommait « la folie de Disney » pendant sa production, car personne n'y croyait."],
+    ["Qui a réalisé Le Voyage dans la Lune en 1902 ?", ["Georges Méliès", "Louis Lumière", "Charles Pathé", "Léon Gaumont"], "Ancien illusionniste, Méliès a inventé de nombreux trucages. L'image de l'obus dans l'œil de la Lune est restée célèbre."],
+    ["Dans quelle ville se trouve le cœur de « Bollywood » ?", ["Mumbai", "New Delhi", "Calcutta", "Chennai"], "Le nom mélange Bombay (ancien nom de Mumbai) et Hollywood. L'Inde est le premier producteur de films au monde."],
+    ["Quel festival décerne la Palme d'or ?", ["Le Festival de Cannes", "La Mostra de Venise", "La Berlinale", "Le Festival de Deauville"], "Le prix porte ce nom depuis 1955, en référence aux palmiers des armoiries de Cannes. Venise remet le Lion d'or, Berlin l'Ours d'or."],
+  ]},
+  { id: "sport", name: "Sport", color: "#2E78B0", qs: [
+    ["Où ont eu lieu les premiers Jeux olympiques modernes ?", ["Athènes", "Paris", "Londres", "Olympie"], "En 1896, à l'initiative de Pierre de Coubertin. Paris accueille la deuxième édition en 1900."],
+    ["Combien de joueurs par équipe sont sur le terrain au rugby à XV ?", ["15", "13", "11", "12"], "Le nom le dit : XV. Au rugby à XIII, il y en a 13, et au rugby à 7, sept."],
+    ["Quelle est la distance officielle d'un marathon ?", ["42,195 km", "40 km", "42 km", "45,5 km"], "Cette distance a été fixée en 1921, sur la base du parcours des Jeux de Londres de 1908."],
+    ["Quel tournoi du Grand Chelem se joue sur terre battue ?", ["Roland-Garros", "Wimbledon", "L'US Open", "L'Open d'Australie"], "Roland Garros était un aviateur, le premier à traverser la Méditerranée en avion en 1913. Wimbledon se joue sur gazon."],
+    ["Contre qui la France a-t-elle gagné la finale de la Coupe du monde 2018 ?", ["La Croatie", "La Belgique", "L'Argentine", "Le Brésil"], "Victoire 4-2 à Moscou, vingt ans après le premier titre de 1998."],
+    ["Combien de trous compte un parcours de golf standard ?", ["18", "9", "12", "21"], "La norme vient du Old Course de St Andrews, en Écosse, qui a fixé ce nombre en 1764."],
+    ["En quelle année a eu lieu le premier Tour de France ?", ["1903", "1889", "1919", "1924"], "Il a été créé par le journal L'Auto pour augmenter ses ventes. Maurice Garin l'a remporté."],
+    ["Quel sport pratique Teddy Riner ?", ["Le judo", "La lutte", "La boxe", "Le karaté"], "Il est l'un des judokas les plus titrés de l'histoire, avec plusieurs titres olympiques et onze titres mondiaux."],
+  ]},
+  { id: "lang", name: "Mots & langue", color: "#7A6A3E", qs: [
+    ["De quelle langue vient le mot « algèbre » ?", ["L'arabe", "Le grec", "Le latin", "Le persan"], "De al-jabr, « la réduction », dans le titre d'un traité du mathématicien al-Khwârizmî (IXe siècle). Son nom a aussi donné « algorithme »."],
+    ["Que signifie « procrastiner » ?", ["Remettre à plus tard", "Parler pour ne rien dire", "Exagérer", "Se plaindre"], "Du latin crastinus, « de demain »."],
+    ["Comment appelle-t-on un mot qui se lit pareil dans les deux sens ?", ["Un palindrome", "Un anagramme", "Un homonyme", "Un oxymore"], "Comme « kayak » ou « radar ». La phrase « Ésope reste ici et se repose » en est un aussi."],
+    ["Quelle institution, fondée en 1635, veille sur la langue française ?", ["L'Académie française", "Le Collège de France", "La Sorbonne", "L'Institut Pasteur"], "Elle a été fondée par le cardinal de Richelieu. Elle compte 40 membres, surnommés les « immortels »."],
+    ["De quelle langue vient le mot « kiosque » ?", ["Le turc", "L'arabe", "L'italien", "L'hindi"], "Du turc köşk, « pavillon de jardin », lui-même emprunté au persan."],
+    ["Que signifie l'expression latine « Carpe diem » ?", ["Cueille le jour", "Le sort en est jeté", "Je suis venu, j'ai vu, j'ai vaincu", "Souviens-toi que tu vas mourir"], "Elle vient du poète Horace. « Le sort en est jeté » (alea jacta est) est attribuée à César, tout comme « veni, vidi, vici »."],
+    ["Qu'est-ce qu'un oxymore ?", ["L'alliance de deux mots contradictoires", "Une répétition de sons", "Une exagération", "Un mot imitant un bruit"], "Exemple célèbre : « Cette obscure clarté qui tombe des étoiles », dans Le Cid de Corneille."],
+    ["Combien de lettres compte le mot le plus long couramment cité du français, « anticonstitutionnellement » ?", ["25", "21", "28", "19"], "Il est souvent présenté comme le plus long mot du français, même si certains termes scientifiques sont plus longs."],
+  ]},
+];
+
+// Index des questions
+const ALL = [];
+CATS.forEach(c => c.qs.forEach((q, i) => ALL.push({ id: c.id + i, cat: c, q: q[0], opts: q[1], expl: q[2] })));
+const BY_ID = Object.fromEntries(ALL.map(x => [x.id, x]));
+const QUIZ_LEN = 10;
+
+// Persistance (navigateur uniquement)
+const KEY = "bagage-culturel-v1";
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+}
+let S = Object.assign({ p: {}, streak: 0, lastDay: null }, load());
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+// Boîtes de Leitner : 0 = jamais vue / ratée, 4 = maîtrisée
+const prog = id => S.p[id] || { box: 0, seen: 0, ok: 0, lastOk: null };
+const mastered = id => prog(id).box >= 3;
+const toReview = () => ALL.filter(x => prog(x.id).lastOk === false);
+
+function today(offset = 0) {
+  const d = new Date(); d.setDate(d.getDate() + offset);
+  return d.toISOString().slice(0, 10);
+}
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+// Choix des questions : priorité aux boîtes basses
+function pick(pool, n) {
+  return shuffle(pool).sort((a, b) => prog(a.id).box - prog(b.id).box).slice(0, n).map(x => x.id);
+}
+
+const app = document.getElementById("app");
+let Q = null; // session de quiz en cours
+
+function renderHome() {
+  Q = null;
+  const seen = ALL.filter(x => prog(x.id).seen > 0);
+  const totalSeen = seen.reduce((s, x) => s + prog(x.id).seen, 0);
+  const totalOk = seen.reduce((s, x) => s + prog(x.id).ok, 0);
+  const rate = totalSeen ? Math.round(100 * totalOk / totalSeen) + " %" : "–";
+  const nMast = ALL.filter(x => mastered(x.id)).length;
+  const rev = toReview().length;
+  const dayIdx = Math.floor(Date.now() / 864e5) % ALL.length;
+  const fact = ALL[(dayIdx * 7) % ALL.length];
+  const streakAlive = S.lastDay === today() || S.lastDay === today(-1);
+
+  app.innerHTML = `
+    <header class="masthead">
+      <h1>Bagage<br>culturel<span>.</span></h1>
+      <div class="streak" title="Jours consécutifs avec au moins un quiz terminé">
+        <b class="num">${streakAlive ? S.streak : 0}</b> jour${(streakAlive ? S.streak : 0) > 1 ? "s" : ""} d'affilée
+      </div>
+    </header>
+
+    <section class="stats" aria-label="Ta progression">
+      <div class="stat"><b class="num">${nMast}<small style="font-size:16px;color:var(--muted)"> / ${ALL.length}</small></b><span>questions maîtrisées</span></div>
+      <div class="stat"><b class="num">${rate}</b><span>de bonnes réponses</span></div>
+      <div class="stat"><b class="num">${rev}</b><span>à revoir</span></div>
+    </section>
+
+    <section class="fact">
+      <div class="eyebrow">Le saviez-vous · ${fact.cat.name}</div>
+      <p>${fact.expl}</p>
+    </section>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="go-mix">Lancer un quiz de ${QUIZ_LEN} questions</button>
+      <button class="btn btn-ghost" id="go-rev" ${rev ? "" : "disabled"}>Revoir mes erreurs ${rev ? `<span class="tag num">${rev}</span>` : ""}</button>
+    </div>
+
+    <section style="display:flex;flex-direction:column;gap:12px">
+      <div class="cats-head"><h2>Par thème</h2><span class="legend">barre = questions maîtrisées</span></div>
+      <div class="cats">
+        ${CATS.map(c => {
+          const m = c.qs.filter((_, i) => mastered(c.id + i)).length;
+          return `<button class="cat" data-cat="${c.id}">
+            <div class="cat-top"><span class="cat-name"><i class="dot" style="background:${c.color}"></i>${c.name}</span><span class="cat-count num">${m}/${c.qs.length}</span></div>
+            <div class="bar"><i style="width:${100 * m / c.qs.length}%"></i></div>
+          </button>`;
+        }).join("")}
+      </div>
+    </section>
+
+    <button class="reset" id="reset">Remettre ma progression à zéro</button>
+  `;
+  document.getElementById("go-mix").onclick = () => start(pick(ALL, QUIZ_LEN), "Quiz mélangé");
+  document.getElementById("go-rev").onclick = () => start(shuffle(toReview().map(x => x.id)).slice(0, QUIZ_LEN), "Révision");
+  app.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => {
+    const c = CATS.find(c => c.id === b.dataset.cat);
+    start(pick(ALL.filter(x => x.cat === c), c.qs.length), c.name);
+  });
+  const r = document.getElementById("reset");
+  r.onclick = () => {
+    if (r.dataset.armed) { S = { p: {}, streak: 0, lastDay: null }; save(); renderHome(); return; }
+    r.dataset.armed = "1"; r.textContent = "Cliquer encore pour confirmer l'effacement";
+  };
+}
+
+function start(ids, label) {
+  Q = { ids, label, i: 0, results: [], answered: false, order: null };
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const item = BY_ID[Q.ids[Q.i]];
+  Q.answered = false;
+  Q.order = shuffle(item.opts.map((t, k) => ({ t, ok: k === 0 })));
+  app.innerHTML = `
+    <div class="qtop">
+      <button class="quit" id="quit">← Accueil</button>
+      <div class="progress" aria-label="Question ${Q.i + 1} sur ${Q.ids.length}">
+        ${Q.ids.map((_, k) => `<i class="${k < Q.i ? (Q.results[k].ok ? "ok" : "ko") : k === Q.i ? "cur" : ""}"></i>`).join("")}
+      </div>
+      <span class="num hint">${Q.i + 1}/${Q.ids.length}</span>
+    </div>
+    <article class="qcard">
+      <span class="chip"><i class="dot" style="background:${item.cat.color}"></i>${item.cat.name}</span>
+      <h2 class="qtext">${item.q}</h2>
+      <div class="opts">
+        ${Q.order.map((o, k) => `<button class="opt" id="opt-${k}" data-k="${k}"><span class="k">${"ABCD"[k]}</span><span>${o.t}</span></button>`).join("")}
+      </div>
+      <div id="after"></div>
+    </article>
+    <p class="hint">Raccourcis : <kbd>A</kbd>–<kbd>D</kbd> ou <kbd>1</kbd>–<kbd>4</kbd> pour répondre, <kbd>Entrée</kbd> pour continuer.</p>
+  `;
+  document.getElementById("quit").onclick = renderHome;
+  app.querySelectorAll(".opt").forEach(b => b.onclick = () => answer(+b.dataset.k));
+}
+
+function answer(k) {
+  if (Q.answered) return;
+  Q.answered = true;
+  const item = BY_ID[Q.ids[Q.i]];
+  const ok = Q.order[k].ok;
+  Q.results.push({ id: item.id, ok, given: Q.order[k].t });
+
+  const p = prog(item.id);
+  p.seen++; if (ok) p.ok++;
+  p.box = ok ? Math.min(4, p.box + 1) : 0;
+  p.lastOk = ok;
+  S.p[item.id] = p; save();
+
+  app.querySelectorAll(".opt").forEach((b, j) => {
+    b.disabled = true;
+    if (Q.order[j].ok) b.classList.add("right");
+    else if (j === k) b.classList.add("wrong");
+    else b.classList.add("dim");
+  });
+  const last = Q.i === Q.ids.length - 1;
+  document.getElementById("after").innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="expl">
+        <span class="verdict ${ok ? "ok" : "ko"}">${ok ? "Bonne réponse." : "Raté : c'était « " + item.opts[0] + " »."}</span>
+        <p>${item.expl}</p>
+      </div>
+      <div class="next-row">
+        <button class="btn btn-primary" id="next">${last ? "Voir mon score" : "Question suivante"} →</button>
+      </div>
+    </div>`;
+  const nb = document.getElementById("next");
+  nb.onclick = next; nb.focus({ preventScroll: true });
+}
+
+function next() {
+  if (!Q || !Q.answered) return;
+  if (Q.i < Q.ids.length - 1) { Q.i++; renderQuestion(); window.scrollTo({ top: 0 }); }
+  else finish();
+}
+
+function finish() {
+  const t = today();
+  if (S.lastDay !== t) { S.streak = S.lastDay === today(-1) ? S.streak + 1 : 1; S.lastDay = t; save(); }
+  const n = Q.results.filter(r => r.ok).length, tot = Q.results.length;
+  const ratio = n / tot;
+  const msg = ratio === 1 ? "Sans faute. Impressionnant."
+    : ratio >= .7 ? "Très solide. Les questions ratées reviendront dans « Revoir mes erreurs »."
+    : ratio >= .4 ? "Pas mal. Chaque erreur est une chose de plus que tu sais maintenant."
+    : "Tu viens d'apprendre beaucoup de choses. Refais un tour de révision demain.";
+  const label = Q.label;
+  app.innerHTML = `
+    <div class="qtop"><span class="eyebrow">${label} terminé</span></div>
+    <div class="score"><b class="num">${n}/${tot}</b><span>bonnes réponses</span></div>
+    <p class="verdict-line">${msg}</p>
+    <div class="actions">
+      <button class="btn btn-primary" id="again">Nouveau quiz</button>
+      <button class="btn btn-ghost" id="home">Retour à l'accueil</button>
+    </div>
+    <ul class="recap">
+      ${Q.results.map(r => {
+        const it = BY_ID[r.id];
+        return `<li><span class="m ${r.ok ? "ok" : "ko"}">${r.ok ? "✓" : "✗"}</span><div><div class="q">${it.q}</div><div class="a">${r.ok ? it.opts[0] : `Ta réponse : ${r.given} · Bonne réponse : <strong>${it.opts[0]}</strong>`}</div></div></li>`;
+      }).join("")}
+    </ul>`;
+  Q = null;
+  document.getElementById("again").onclick = () => start(pick(ALL, QUIZ_LEN), "Quiz mélangé");
+  document.getElementById("home").onclick = renderHome;
+  window.scrollTo({ top: 0 });
+}
+
+document.addEventListener("keydown", e => {
+  if (!Q || e.ctrlKey || e.metaKey || e.altKey) return;
+  const key = e.key.toLowerCase();
+  const map = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
+  if (!Q.answered && key in map) { e.preventDefault(); answer(map[key]); }
+  else if (Q.answered && key === "enter" && document.activeElement?.id !== "next") { e.preventDefault(); next(); }
+});
+
+renderHome();
+</script>
+
+</html>

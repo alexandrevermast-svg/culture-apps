@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mes quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Archivo:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #F1F1EE; --surface: #FFFFFF; --ink: #1D1F22; --muted: #62666C; --line: #D9DAD5;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141518; --surface: #1D1F23; --ink: #EDEDEA; --muted: #9EA2A8; --line: #2E3136; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 "Archivo", system-ui, sans-serif;
+  padding: 40px max(16px, env(safe-area-inset-right, 0px)) 56px max(16px, env(safe-area-inset-left, 0px));
+}
+main { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+h1 { margin: 0; font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 800; font-size: clamp(36px, 9vw, 52px); letter-spacing: -.02em; line-height: 1; }
+.lead { margin: 0; color: var(--muted); }
+.apps { display: grid; gap: 14px; }
+a.app { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; align-items: center; text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+a.app:hover, a.app:focus-visible { border-color: var(--ink); outline: none; }
+.badge { width: 64px; height: 64px; border-radius: 8px; display: grid; place-items: center; font-size: 26px; }
+.b-setlist { background: #15111A; color: #F2A93B; font-family: "Anton", Impact, sans-serif; }
+.b-bagage { background: #1C2B25; color: #E3A008; font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 800; }
+.app h2 { margin: 0; font-size: 20px; }
+.app p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Mes quiz</h1>
+  <p class="lead">Deux applis pour apprendre en jouant. Ta progression est enregistrée sur chaque appareil.</p>
+  <div class="apps">
+    <a class="app" href="setlist/">
+      <span class="badge b-setlist" aria-hidden="true">SL</span>
+      <span><h2>Setlist</h2><p>Histoire de la musique : 96 questions, 485 affirmations vrai ou légende, 66 anecdotes rock.</p></span>
+    </a>
+    <a class="app" href="bagage/">
+      <span class="badge b-bagage" aria-hidden="true">B.</span>
+      <span><h2>Bagage culturel</h2><p>Culture générale : 64 questions en 8 thèmes, avec explications et révision des erreurs.</p></span>
+    </a>
+  </div>
+</main>
+</body>
+</html>

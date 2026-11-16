@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#15111A">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Setlist</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: colonne unique façon affiche de concert ; titres condensés en capitales, questions = « pistes » d'une setlist */
+:root {
+  --bg: #15111A;
+  --surface: #201A27;
+  --ink: #F2ECE4;
+  --muted: #A79DB0;
+  --line: #352C3F;
+  --accent: #F2A93B;
+  --accent-ink: #F2A93B;
+  --on-accent: #1A1208;
+  --good: #63C98F;
+  --good-bg: #173326;
+  --bad: #F0786A;
+  --bad-bg: #3D1C1A;
+  --display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --ui: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Serif 4", Georgia, serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #EFEDF2; --surface: #FFFFFF; --ink: #1E1726; --muted: #645B70; --line: #D8D3DE;
+    --accent: #E39A22; --accent-ink: #8F5200; --on-accent: #1A1208;
+    --good: #23774A; --good-bg: #DCF0E3; --bad: #B43A2C; --bad-bg: #F7DFDB;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #EFEDF2; --surface: #FFFFFF; --ink: #1E1726; --muted: #645B70; --line: #D8D3DE;
+  --accent: #E39A22; --accent-ink: #8F5200; --on-accent: #1A1208;
+  --good: #23774A; --good-bg: #DCF0E3; --bad: #B43A2C; --bad-bg: #F7DFDB;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--ui); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+#app { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 26px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+.eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.display { font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: .01em; }
+
+/* En-tête */
+.masthead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.masthead h1 { font-family: var(--display); font-weight: 400; font-size: clamp(56px, 15vw, 96px); line-height: .85; text-transform: uppercase; letter-spacing: -.005em; }
+.masthead h1 span { color: var(--accent); }
+.masthead p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); }
+.tab { background: none; border: 0; padding: 10px 2px; margin-right: 24px; font-family: var(--display); text-transform: uppercase; font-size: 22px; letter-spacing: .02em; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab small { font-family: var(--ui); font-size: 12px; font-weight: 600; margin-left: 6px; vertical-align: middle; color: var(--muted); }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+.stat { padding: 12px 4px 14px; display: flex; flex-direction: column; gap: 2px; }
+.stat + .stat { border-left: 1px solid var(--line); padding-left: 14px; }
+.stat b { font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1.05; }
+.stat b small { font-size: 18px; color: var(--muted); }
+.stat span { font-size: 13px; color: var(--muted); }
+
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { border: 0; border-radius: 4px; padding: 14px 20px; font-weight: 800; font-size: 15px; letter-spacing: .02em; display: inline-flex; align-items: center; gap: 10px; }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-ghost { background: transparent; border: 1.5px solid var(--line); }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.btn .tag { font-size: 12px; background: var(--bad); color: var(--surface); border-radius: 99px; padding: 1px 8px; }
+
+/* Tracklist des thèmes */
+.tracklist { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.track { width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); padding: 14px 4px; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 14px; align-items: center; }
+.track:hover { background: var(--surface); }
+.track .no { font-family: var(--display); font-size: 24px; color: var(--accent-ink); }
+.track .nm { font-weight: 800; font-size: 17px; }
+.track .sub { font-size: 13px; color: var(--muted); }
+.track .meter { display: flex; gap: 3px; align-items: flex-end; height: 22px; }
+.track .meter i { width: 4px; background: var(--line); border-radius: 1px; }
+.track .meter i.on { background: var(--accent); }
+.track .cnt { font-size: 12px; color: var(--muted); text-align: right; margin-top: 2px; }
+.reset { background: none; border: 0; color: var(--muted); font-size: 13px; text-decoration: underline; padding: 0; align-self: flex-start; }
+
+/* Quiz */
+.qtop { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.quit { background: none; border: 0; color: var(--muted); font-weight: 600; padding: 4px 0; }
+.quit:hover { color: var(--ink); }
+.progress { display: flex; gap: 4px; flex: 1; max-width: 320px; }
+.progress i { flex: 1; height: 6px; border-radius: 1px; background: var(--line); }
+.progress i.ok { background: var(--good); }
+.progress i.ko { background: var(--bad); }
+.progress i.cur { background: var(--accent); }
+.hint { font-size: 13px; color: var(--muted); }
+.qcard { display: flex; flex-direction: column; gap: 22px; }
+.qhead { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.qhead .piste { font-family: var(--display); font-size: 20px; color: var(--accent-ink); text-transform: uppercase; }
+.qhead .theme { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.qtext { font-family: var(--ui); font-weight: 800; font-size: clamp(22px, 5.2vw, 30px); line-height: 1.22; letter-spacing: -.01em; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt { text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 4px; padding: 14px 16px; display: flex; gap: 14px; align-items: center; font-size: 17px; transition: border-color .15s, background .15s; }
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt .k { width: 28px; height: 28px; flex: none; border-radius: 3px; border: 1px solid var(--line); display: grid; place-items: center; font-size: 13px; font-weight: 800; color: var(--muted); }
+.opt[disabled] { cursor: default; }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.right .k { background: var(--good); color: var(--bg); border-color: var(--good); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt.wrong .k { background: var(--bad); color: var(--bg); border-color: var(--bad); }
+.opt.dim { opacity: .5; }
+.expl { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; display: flex; flex-direction: column; gap: 6px; animation: rise .3s ease-out; }
+.expl .verdict { font-weight: 800; font-size: 17px; }
+.expl .verdict.ok { color: var(--good); }
+.expl .verdict.ko { color: var(--bad); }
+.expl p { margin: 0; font-family: var(--body); font-size: 17px; line-height: 1.6; max-width: 62ch; }
+kbd { font-family: var(--ui); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 0 5px; font-size: 12px; }
+
+/* Vrai ou légende */
+.vl-intro { display: flex; flex-direction: column; gap: 12px; }
+.vl-intro p { margin: 0; font-family: var(--body); font-size: 17px; line-height: 1.6; max-width: 62ch; }
+.bar { height: 6px; background: var(--line); border-radius: 1px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); }
+.qtext-vl { font-family: var(--body); font-weight: 600; font-size: clamp(22px, 5vw, 28px); line-height: 1.35; letter-spacing: 0; }
+.opts-vl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.opts-vl .opt { justify-content: center; padding-block: 18px; font-weight: 800; font-size: 18px; }
+
+/* Résultats */
+.score { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.score b { font-family: var(--display); font-weight: 400; font-size: clamp(80px, 20vw, 120px); line-height: .85; }
+.score span { font-size: 18px; color: var(--muted); }
+.verdict-line { font-family: var(--body); font-size: 19px; margin: 0; }
+.recap { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.recap li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.recap .m { font-weight: 800; font-size: 18px; line-height: 1.3; }
+.recap .m.ok { color: var(--good); }
+.recap .m.ko { color: var(--bad); }
+.recap .q { font-weight: 600; }
+.recap .a { font-size: 14px; color: var(--muted); }
+
+/* Coulisses (anecdotes) */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { background: transparent; border: 1.5px solid var(--line); border-radius: 99px; padding: 6px 14px; font-size: 14px; font-weight: 600; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.anec { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 26px 24px 22px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden; animation: rise .25s ease-out; }
+.anec .yr { position: absolute; right: -6px; top: -18px; font-family: var(--display); font-size: 120px; line-height: 1; color: var(--line); pointer-events: none; user-select: none; }
+.anec .meta { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; position: relative; }
+.anec .artist { font-weight: 800; color: var(--accent-ink); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
+.anec h2 { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 7vw, 42px); line-height: 1.02; text-transform: uppercase; position: relative; }
+.anec p { margin: 0; font-family: var(--body); font-size: 18px; line-height: 1.62; max-width: 62ch; position: relative; }
+.anec-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.anec-nav .grp { display: flex; gap: 8px; }
+.seen-note { font-size: 13px; color: var(--muted); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+@media (max-width: 460px) {
+  .stat b { font-size: 26px; }
+  .stat + .stat { padding-left: 10px; }
+  .actions .btn { flex: 1 1 100%; justify-content: center; }
+  .track { grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; }
+  .anec { padding: 22px 18px 18px; }
+  .anec .yr { font-size: 90px; }
+}
+</style>
+
+<main id="app" aria-live="polite"></main>
+
+<script src="vl1.js"></script>
+<script src="vl2.js"></script>
+<script src="vl3.js"></script>
+<script src="vl4.js"></script>
+<script src="coulisses-plus.js"></script>
+<script>
+// [énoncé, [bonne réponse, leurre, leurre, leurre], explication]
+const CATS = [
+  { id: "clas", name: "Classique & baroque", sub: "De Bach à Stravinsky", qs: [
+    ["Quelle symphonie de Beethoven se termine par l'Ode à la joie ?", ["La 9e", "La 5e", "La 3e, « Héroïque »", "La 6e, « Pastorale »"], "Créée à Vienne en 1824, alors que Beethoven était presque totalement sourd. Le thème est devenu l'hymne de l'Union européenne."],
+    ["Quelle œuvre Mozart laisse-t-il inachevée à sa mort en 1791 ?", ["Son Requiem", "La Flûte enchantée", "Don Giovanni", "Les Noces de Figaro"], "Le Requiem a été complété par son élève Franz Xaver Süssmayr, à la demande de sa veuve Constanze, qui avait besoin d'être payée par le commanditaire."],
+    ["Comment est mort Jean-Baptiste Lully, compositeur de Louis XIV ?", ["D'une gangrène après s'être frappé le pied avec son bâton de direction", "Dans un duel", "Empoisonné à la cour", "Noyé dans la Seine"], "En 1687, il dirigeait un Te Deum en frappant le sol avec une lourde canne pour battre la mesure. Il s'est blessé au pied et a refusé l'amputation."],
+    ["Quelle création provoque une quasi-émeute au Théâtre des Champs-Élysées en 1913 ?", ["Le Sacre du printemps de Stravinsky", "Boléro de Ravel", "Carmen de Bizet", "Pelléas et Mélisande de Debussy"], "Les rythmes brutaux et la chorégraphie de Nijinski choquent le public, qui siffle et se bat dans la salle. L'œuvre est aujourd'hui un pilier du répertoire."],
+    ["Combien d'opéras forment L'Anneau du Nibelung de Wagner ?", ["4", "3", "5", "7"], "On l'appelle aussi la Tétralogie. Jouée en entier, elle dure environ 15 heures, sur quatre soirées."],
+    ["Qui a composé La Traviata ?", ["Giuseppe Verdi", "Giacomo Puccini", "Gioachino Rossini", "Vincenzo Bellini"], "Créée à Venise en 1853, d'après La Dame aux camélias d'Alexandre Dumas fils. La première fut un échec."],
+    ["Où est né Frédéric Chopin ?", ["En Pologne", "En France", "En Autriche", "En Hongrie"], "Il naît en 1810 près de Varsovie et s'installe à Paris en 1831. Son cœur a été rapporté à Varsovie, où il repose dans l'église Sainte-Croix."],
+    ["Qui a composé les Gymnopédies ?", ["Erik Satie", "Claude Debussy", "Gabriel Fauré", "Maurice Ravel"], "Trois courtes pièces pour piano de 1888. Satie était aussi pianiste de cabaret au Chat Noir, à Montmartre."],
+    ["Quel instrument Bartolomeo Cristofori invente-t-il vers 1700 ?", ["Le piano", "Le violon", "La clarinette", "L'orgue à tuyaux"], "On l'appelait « gravicembalo col piano e forte » : un clavecin qui pouvait jouer doux et fort, d'où le nom de pianoforte."],
+    ["Quelle œuvre Saint-Saëns refusa-t-il de publier de son vivant, sauf un morceau ?", ["Le Carnaval des animaux", "La Danse macabre", "La Symphonie avec orgue", "Samson et Dalila"], "Il la jugeait trop légère pour sa réputation. Seul « Le Cygne » fut publié avant sa mort en 1921."],
+    ["Quelle période musicale suit l'époque baroque ?", ["La période classique", "La période romantique", "La Renaissance", "Le Moyen Âge"], "Le baroque s'achève vers 1750, l'année de la mort de Bach. Vient ensuite la période classique de Haydn, Mozart et du jeune Beethoven."],
+    ["Quel compositeur était aussi prêtre et surnommé « le Prêtre roux » ?", ["Antonio Vivaldi", "Arcangelo Corelli", "Domenico Scarlatti", "Claudio Monteverdi"], "Ordonné en 1703, Vivaldi enseignait la musique aux orphelines de l'Ospedale della Pietà de Venise, qui formaient un orchestre réputé."],
+  ]},
+  { id: "jazz", name: "Jazz & blues", sub: "La Nouvelle-Orléans, Harlem, le Delta", qs: [
+    ["Quel était le surnom de Louis Armstrong ?", ["Satchmo", "Bird", "Duke", "Count"], "Abréviation de « satchel mouth », bouche en forme de sacoche. Bird, c'est Charlie Parker ; Duke, Ellington ; Count, Basie."],
+    ["Selon la légende, quel bluesman a vendu son âme au diable à un carrefour ?", ["Robert Johnson", "Muddy Waters", "B.B. King", "John Lee Hooker"], "Il serait passé de guitariste médiocre à virtuose en très peu de temps. Il est mort en 1938 à 27 ans, après n'avoir enregistré que 29 chansons."],
+    ["Comment B.B. King a-t-il appelé sa guitare ?", ["Lucille", "Lola", "Layla", "Lady"], "En 1949, deux hommes se battent pour une femme nommée Lucille et renversent un poêle. B.B. King retourne dans la salle en feu chercher sa guitare. Il les nomme toutes Lucille depuis, pour ne jamais refaire ça."],
+    ["Combien de doigts valides Django Reinhardt avait-il à la main gauche pour jouer ?", ["Deux", "Trois", "Quatre", "Un"], "En 1928, l'incendie de sa roulotte lui brûle gravement la main. Il réinvente sa technique avec l'index et le majeur, et devient le père du jazz manouche."],
+    ["Quelle chanson de Billie Holiday dénonce les lynchages dans le Sud des États-Unis ?", ["Strange Fruit", "God Bless the Child", "Summertime", "Lover Man"], "Enregistrée en 1939. Les « fruits étranges » sont les corps pendus aux arbres. Sa maison de disques a refusé de la sortir."],
+    ["Quel saxophoniste a enregistré A Love Supreme ?", ["John Coltrane", "Charlie Parker", "Sonny Rollins", "Stan Getz"], "Enregistré en décembre 1964, c'est une suite en quatre parties pensée comme une prière, après que Coltrane a surmonté son addiction."],
+    ["Quel était l'instrument de Thelonious Monk ?", ["Le piano", "La trompette", "Le saxophone ténor", "La batterie"], "Il était célèbre pour ses dissonances, ses silences et ses danses improvisées sur scène pendant que ses musiciens jouaient."],
+    ["Comment appelle-t-on le chant improvisé avec des syllabes sans signification ?", ["Le scat", "Le swing", "Le riff", "Le bop"], "Selon la légende, Louis Armstrong aurait laissé tomber sa feuille de paroles pendant l'enregistrement de « Heebie Jeebies » en 1926 et aurait improvisé."],
+    ["Dans quel quartier de New York se trouvait le Cotton Club ?", ["Harlem", "Greenwich Village", "Brooklyn", "Le Bronx"], "L'orchestre de Duke Ellington y joua de 1927 à 1931. Paradoxe : les musiciens étaient noirs, mais le public était réservé aux Blancs."],
+    ["Quel était le surnom de Charlie Parker ?", ["Bird", "Satchmo", "Pres", "Dizzy"], "Diminutif de « Yardbird ». Avec Dizzy Gillespie, il invente le bebop dans les années 1940."],
+    ["Quel album de Miles Davis est l'album de jazz le plus vendu de l'histoire ?", ["Kind of Blue", "Bitches Brew", "Sketches of Spain", "Round About Midnight"], "Enregistré en 1959 en deux séances seulement. Les musiciens découvraient la plupart des thèmes en studio."],
+    ["Ella Fitzgerald était surnommée…", ["La Première Dame de la chanson", "La Reine du blues", "Lady Day", "La Divine"], "« First Lady of Song ». Lady Day, c'est Billie Holiday ; la « Divine », Sarah Vaughan."],
+  ]},
+  { id: "orig", name: "Rock des origines", sub: "Années 50 et 60", qs: [
+    ["Quel titre de 1951 est souvent cité comme le premier rock'n'roll ?", ["Rocket 88", "Rock Around the Clock", "Hound Dog", "Johnny B. Goode"], "Enregistré par Jackie Brenston et Ike Turner chez Sam Phillips. L'ampli de guitare, abîmé en route, donnait un son saturé : la distorsion est née d'un accident."],
+    ["Dans quelle ville se trouvait Sun Records, le label des débuts d'Elvis ?", ["Memphis", "Nashville", "La Nouvelle-Orléans", "Chicago"], "Elvis y enregistre son premier single, « That's All Right », en juillet 1954. Johnny Cash, Jerry Lee Lewis et Carl Perkins y sont passés aussi."],
+    ["Quel guitariste est célèbre pour son « duck walk » ?", ["Chuck Berry", "Bo Diddley", "Buddy Holly", "Eddie Cochran"], "Il avançait accroupi sur une jambe en sautillant. Il racontait l'avoir fait la première fois pour cacher les plis de son costume."],
+    ["Quel musicien est mort dans le crash aérien du 3 février 1959, « le jour où la musique est morte » ?", ["Buddy Holly", "Eddie Cochran", "Jerry Lee Lewis", "Little Richard"], "Ritchie Valens et The Big Bopper étaient aussi à bord. Don McLean a popularisé l'expression dans « American Pie » en 1971."],
+    ["De quelle ville viennent les Beatles ?", ["Liverpool", "Londres", "Manchester", "Birmingham"], "Ils ont aussi beaucoup joué à Hambourg entre 1960 et 1962, parfois huit heures par nuit, ce qui a forgé leur jeu de scène."],
+    ["Qui était le batteur des Beatles avant Ringo Starr ?", ["Pete Best", "Stuart Sutcliffe", "Brian Epstein", "George Martin"], "Il est remplacé en août 1962, juste avant le premier succès. Stuart Sutcliffe, lui, était le premier bassiste."],
+    ["D'où vient le nom des Rolling Stones ?", ["D'une chanson de Muddy Waters", "D'un proverbe anglais", "D'une émission de radio", "D'un magazine"], "Brian Jones, au téléphone avec un journaliste, aperçoit « Rollin' Stone » sur un disque de Muddy Waters posé par terre."],
+    ["En quelle année a lieu le festival de Woodstock ?", ["1969", "1967", "1970", "1971"], "Du 15 au 18 août 1969, sur la ferme de Max Yasgur à Bethel, dans l'État de New York. Pas à Woodstock même."],
+    ["Quel artiste clôt Woodstock avec une version saturée de l'hymne américain ?", ["Jimi Hendrix", "Janis Joplin", "Santana", "The Who"], "À cause des retards, il joue le lundi matin devant une partie seulement du public. Sa version imite les bombes et les sirènes, en écho à la guerre du Vietnam."],
+    ["À quel âge sont morts Hendrix, Janis Joplin, Jim Morrison et Brian Jones ?", ["27 ans", "25 ans", "30 ans", "33 ans"], "Tous les quatre entre 1969 et 1971. On parle du « Club des 27 », que Kurt Cobain et Amy Winehouse ont rejoint plus tard."],
+    ["Où Bob Dylan choque-t-il le public en jouant à l'électrique en 1965 ?", ["Au festival folk de Newport", "Au Carnegie Hall", "Au Royal Albert Hall", "À Woodstock"], "Une partie du public le hue : le folk était alors acoustique et engagé. Un an plus tard, à Manchester, un spectateur le traite de « Judas »."],
+    ["Quelle émission de télévision lance la Beatlemania aux États-Unis en février 1964 ?", ["The Ed Sullivan Show", "American Bandstand", "The Tonight Show", "Top of the Pops"], "Environ 73 millions d'Américains les regardent le 9 février 1964, un record d'audience à l'époque."],
+  ]},
+  { id: "rock70", name: "Rock des années 70", sub: "Hard rock, prog, glam, punk", qs: [
+    ["Sur quel album de Led Zeppelin figure « Stairway to Heaven » ?", ["L'album sans titre, dit Led Zeppelin IV", "Led Zeppelin II", "Houses of the Holy", "Physical Graffiti"], "Sorti en 1971, l'album n'a pas de titre officiel. La pochette n'affiche ni le nom du groupe ni le titre, seulement quatre symboles."],
+    ["Quel album de Pink Floyd est resté plus de 900 semaines dans le classement américain ?", ["The Dark Side of the Moon", "The Wall", "Wish You Were Here", "Animals"], "Sorti en 1973, il est resté classé dans le Billboard 200 pendant plus de 15 ans au total."],
+    ["Où est né Freddie Mercury ?", ["À Zanzibar", "À Londres", "À Bombay", "Au Caire"], "Il naît Farrokh Bulsara en 1946, dans une famille parsie. Il a grandi en partie en Inde avant de s'installer en Angleterre."],
+    ["Quel événement inspire « Smoke on the Water » de Deep Purple ?", ["L'incendie du casino de Montreux", "Un orage sur la Tamise", "L'incendie d'un studio londonien", "Une fumée de scène ratée"], "En décembre 1971, pendant un concert de Frank Zappa, un spectateur tire une fusée éclairante et le casino brûle. Le groupe voit la fumée s'étendre sur le lac Léman."],
+    ["Qui était le manager des Sex Pistols ?", ["Malcolm McLaren", "Brian Epstein", "Andrew Loog Oldham", "Peter Grant"], "Il tenait avec Vivienne Westwood une boutique de King's Road, SEX, où le groupe s'est formé."],
+    ["Dans quel club new-yorkais les Ramones ont-ils fait leurs débuts ?", ["Le CBGB", "Le Studio 54", "Le Fillmore East", "Le Max's Kansas City"], "Le nom signifiait « Country, BlueGrass and Blues », la musique que le patron voulait programmer. Il est devenu le berceau du punk new-yorkais."],
+    ["Quel est le nom de l'alter ego extraterrestre de David Bowie en 1972 ?", ["Ziggy Stardust", "Major Tom", "Aladdin Sane", "Le Thin White Duke"], "Bowie annonce sa « mort » sur scène à l'Hammersmith Odeon le 3 juillet 1973. Même ses musiciens n'étaient pas prévenus."],
+    ["D'où vient le groupe AC/DC ?", ["D'Australie", "D'Écosse", "D'Angleterre", "Des États-Unis"], "Formé à Sydney en 1973 par les frères Malcolm et Angus Young, nés à Glasgow et arrivés enfants en Australie."],
+    ["Quel membre fondateur de Pink Floyd quitte le groupe en 1968 ?", ["Syd Barrett", "Roger Waters", "Richard Wright", "Nick Mason"], "Sa santé mentale se dégrade avec l'usage de LSD. « Shine On You Crazy Diamond » lui est dédiée."],
+    ["Quel album de Fleetwood Mac est enregistré en pleine série de ruptures dans le groupe ?", ["Rumours", "Tusk", "Tango in the Night", "Then Play On"], "Sorti en 1977. Les deux couples du groupe se séparaient pendant l'enregistrement et chantaient leurs disputes dans les chansons."],
+    ["Quel groupe ne s'est jamais montré démaquillé en public avant 1983 ?", ["Kiss", "Alice Cooper", "The New York Dolls", "Twisted Sister"], "Chaque membre avait un personnage : le Démon, l'Enfant des étoiles, l'Homme de l'espace, le Chat. Ils se démaquillent sur MTV en 1983."],
+    ["Quelle chanson de Queen n'a pas de refrain et dure près de six minutes ?", ["Bohemian Rhapsody", "We Will Rock You", "Somebody to Love", "Killer Queen"], "Sortie en 1975. La maison de disques la trouvait trop longue pour la radio. Elle a été n°1 au Royaume-Uni pendant neuf semaines."],
+  ]},
+  { id: "rock80", name: "Années 80 & 90", sub: "New wave, metal, grunge, britpop", qs: [
+    ["Quel est l'album le plus vendu de l'histoire ?", ["Thriller de Michael Jackson", "Back in Black d'AC/DC", "The Dark Side of the Moon", "Bad de Michael Jackson"], "Sorti en 1982. Sept de ses neuf titres sont sortis en single et ont été classés dans le top 10 américain."],
+    ["Quel album a pour pochette un bébé qui nage vers un billet de dollar ?", ["Nevermind de Nirvana", "Ten de Pearl Jam", "In Utero de Nirvana", "Siamese Dream des Smashing Pumpkins"], "Sorti en 1991, il a détrôné Dangerous de Michael Jackson en tête des ventes américaines en janvier 1992."],
+    ["De quelle ville vient la scène grunge ?", ["Seattle", "Los Angeles", "Portland", "Chicago"], "Nirvana, Pearl Jam, Soundgarden et Alice in Chains en sont issus. Le label Sub Pop y a été fondé."],
+    ["En quelle année a lieu le concert Live Aid ?", ["1985", "1984", "1987", "1989"], "Le 13 juillet 1985, à Londres et à Philadelphie. La prestation de Queen, d'une vingtaine de minutes, est souvent citée comme le meilleur concert rock de l'histoire."],
+    ["Quel est le premier clip diffusé par MTV en 1981 ?", ["Video Killed the Radio Star", "Thriller", "Take On Me", "Billie Jean"], "Un titre des Buggles. Le choix était volontairement ironique pour une chaîne qui voulait faire de la musique une affaire d'images."],
+    ["De quelle ville vient U2 ?", ["Dublin", "Belfast", "Cork", "Glasgow"], "Le groupe se forme en 1976 au lycée Mount Temple, à la suite d'une petite annonce du batteur Larry Mullen Jr."],
+    ["Quel groupe sort l'album surnommé le « Black Album » en 1991 ?", ["Metallica", "Megadeth", "Slayer", "Iron Maiden"], "L'album s'appelle simplement Metallica. Il contient « Enter Sandman » et « Nothing Else Matters »."],
+    ["Quel groupe gagne la « bataille de la britpop » contre Oasis en août 1995 ?", ["Blur", "Pulp", "Suede", "Elastica"], "Les deux groupes sortent un single le même jour. « Country House » de Blur bat « Roll With It » d'Oasis au classement."],
+    ["Qui était le guitariste des Smiths ?", ["Johnny Marr", "Bernard Sumner", "Graham Coxon", "The Edge"], "Avec le chanteur Morrissey, il a écrit tous les titres du groupe entre 1982 et 1987."],
+    ["Quel artiste sort l'album et le film Purple Rain en 1984 ?", ["Prince", "Michael Jackson", "David Bowie", "Lionel Richie"], "Le film lui vaut l'Oscar de la meilleure musique de film. Prince jouait presque tous les instruments sur ses albums."],
+    ["Quel guitariste de Guns N' Roses porte un haut-de-forme ?", ["Slash", "Izzy Stradlin", "Duff McKagan", "Axl Rose"], "Il est né à Londres sous le nom de Saul Hudson. Il a acheté son chapeau dans une boutique de Melrose Avenue, à Los Angeles."],
+    ["Quel groupe d'Oxford sort OK Computer en 1997 ?", ["Radiohead", "Muse", "Coldplay", "Supergrass"], "L'album parle d'aliénation et de technologie. Muse vient de Teignmouth, dans le Devon."],
+  ]},
+  { id: "soul", name: "Soul, funk & disco", sub: "Motown, Stax, Studio 54", qs: [
+    ["Qui était surnommé « The Godfather of Soul » ?", ["James Brown", "Ray Charles", "Otis Redding", "Sam Cooke"], "On l'appelait aussi « l'homme qui travaille le plus dur du show-business ». Ses rythmes ont été parmi les plus samplés du hip-hop."],
+    ["D'où vient le nom Motown ?", ["De « Motor Town », surnom de Détroit", "Du nom de son fondateur", "D'une marque de voiture", "D'une rue de Chicago"], "Berry Gordy fonde le label en 1959 avec un prêt familial de 800 dollars. Détroit était la capitale de l'automobile."],
+    ["Qui a écrit et enregistré « Respect » en premier, avant Aretha Franklin ?", ["Otis Redding", "Sam Cooke", "Wilson Pickett", "Marvin Gaye"], "Redding la sort en 1965. Aretha la reprend en 1967 en ajoutant « R-E-S-P-E-C-T » et « sock it to me ». Redding aurait dit qu'elle lui avait volé sa chanson."],
+    ["Dans quelle ville se trouvait le Studio 54 ?", ["New York", "Los Angeles", "Miami", "Paris"], "La boîte ouvre en 1977 sur la 54e rue. Le tri à l'entrée était impitoyable, même pour les célébrités."],
+    ["Quel groupe signe la musique du film Saturday Night Fever (1977) ?", ["Les Bee Gees", "Chic", "Earth, Wind & Fire", "KC and the Sunshine Band"], "La bande originale a été l'album le plus vendu de l'histoire jusqu'à Thriller."],
+    ["Quel album de Marvin Gaye (1971) parle de guerre, de pauvreté et d'écologie ?", ["What's Going On", "Let's Get It On", "I Want You", "Here, My Dear"], "Berry Gordy, patron de Motown, ne voulait pas le sortir, le jugeant trop politique. C'est devenu l'un des plus grands albums de la soul."],
+    ["À quel âge Stevie Wonder signe-t-il chez Motown ?", ["11 ans", "16 ans", "8 ans", "14 ans"], "Il signe en 1961 sous le nom de « Little Stevie Wonder ». Il est n°1 aux États-Unis à 13 ans avec « Fingertips »."],
+    ["Que se passe-t-il lors de la « Disco Demolition Night » de 1979 ?", ["Des disques de disco sont dynamités dans un stade de Chicago", "Une boîte disco est démolie", "Les radios bannissent le disco", "Un concert de disco est annulé"], "Pendant un match de baseball, une caisse de disques explose sur le terrain. Les spectateurs envahissent la pelouse et le match est annulé."],
+    ["Quel funkster a fait atterrir un vaisseau spatial sur scène, la « Mothership » ?", ["George Clinton", "Sly Stone", "Rick James", "Bootsy Collins"], "Avec Parliament-Funkadelic, dans les années 70. La vraie Mothership est aujourd'hui exposée au musée Smithsonian de Washington."],
+    ["Quel titre de Donna Summer (1977) est entièrement construit au synthétiseur ?", ["I Feel Love", "Hot Stuff", "Love to Love You Baby", "Bad Girls"], "Produit par Giorgio Moroder. En l'entendant, Brian Eno aurait dit à Bowie que c'était le son du futur."],
+    ["Quel tube d'Otis Redding devient n°1 après sa mort en 1967 ?", ["(Sittin' On) The Dock of the Bay", "Try a Little Tenderness", "These Arms of Mine", "Respect"], "Enregistré quelques jours avant le crash de son avion. Le sifflement final remplace un couplet qu'il n'avait pas encore écrit."],
+    ["Qui était surnommé « The Genius » ?", ["Ray Charles", "Stevie Wonder", "Quincy Jones", "Prince"], "En mêlant gospel et rhythm and blues dans les années 50, il a posé les bases de la soul. Il était aveugle depuis l'âge de sept ans."],
+  ]},
+  { id: "hiphop", name: "Hip-hop & électro", sub: "Du Bronx à la French Touch", qs: [
+    ["Où et quand situe-t-on la naissance du hip-hop ?", ["À une fête de DJ Kool Herc dans le Bronx, en 1973", "À un concert à Harlem en 1979", "Dans un club de Brooklyn en 1968", "À une émission de radio en 1975"], "Le 11 août 1973, au 1520 Sedgwick Avenue. Herc enchaîne les « breaks » de deux disques identiques pour faire danser plus longtemps."],
+    ["Quel est le premier grand tube rap, en 1979 ?", ["Rapper's Delight", "The Message", "Planet Rock", "Walk This Way"], "Par le Sugarhill Gang. Le titre dure près de 15 minutes dans sa version longue et reprend la ligne de basse de « Good Times » de Chic."],
+    ["De quel pays vient Kraftwerk ?", ["L'Allemagne", "Les Pays-Bas", "La Belgique", "La Suisse"], "Le groupe se forme à Düsseldorf en 1970. Son influence sur l'électro, la techno et même le hip-hop est immense."],
+    ["Quelle boîte à rythmes Roland de 1980 est devenue culte dans le hip-hop ?", ["La TR-808", "La TB-303", "La SH-101", "La Juno-106"], "D'abord un échec commercial, elle est revendue d'occasion à bas prix. Sa grosse caisse grave a façonné le hip-hop. La TB-303, elle, a créé l'acid house."],
+    ["Dans quelle ville naît la house music ?", ["Chicago", "Detroit", "New York", "Londres"], "Le nom viendrait du Warehouse, club où mixait Frankie Knuckles au début des années 80."],
+    ["Dans quelle ville naît la techno ?", ["Detroit", "Berlin", "Chicago", "Manchester"], "Juan Atkins, Derrick May et Kevin Saunderson, les « Belleville Three », l'inventent au milieu des années 80."],
+    ["Quel duo français sort l'album Homework en 1997 ?", ["Daft Punk", "Air", "Justice", "Cassius"], "Leur nom vient d'une critique qui qualifiait de « daft punky thrash » (punk débile) leur premier groupe, Darlin'."],
+    ["Quel groupe de rap reprend « Walk This Way » avec Aerosmith en 1986 ?", ["Run-DMC", "Beastie Boys", "Public Enemy", "LL Cool J"], "Le clip montre les deux groupes cassant un mur entre leurs studios. Le titre relance la carrière d'Aerosmith."],
+    ["Pour quel film Eminem remporte-t-il un Oscar avec « Lose Yourself » ?", ["8 Mile", "Get Rich or Die Tryin'", "Hustle & Flow", "Straight Outta Compton"], "En 2003, c'est le premier titre rap à gagner l'Oscar de la meilleure chanson. Eminem n'était pas venu à la cérémonie."],
+    ["De quelle ville vient le groupe IAM ?", ["Marseille", "Paris", "Lyon", "Toulouse"], "Leur album L'École du micro d'argent (1997) est considéré comme l'un des sommets du rap français."],
+    ["Quel rappeur sort Qui sème le vent récolte le tempo en 1991 ?", ["MC Solaar", "Oxmo Puccino", "Doc Gynéco", "Akhenaton"], "Né à Dakar, il est révélé par « Bouge de là ». Ses jeux de mots ont ouvert le rap français au grand public."],
+    ["Quel duo de rap américain est au cœur de la rivalité côte Est contre côte Ouest ?", ["Tupac et The Notorious B.I.G.", "Dr. Dre et Snoop Dogg", "Jay-Z et Nas", "Ice Cube et Eazy-E"], "Tupac est tué en septembre 1996 à Las Vegas, Biggie en mars 1997 à Los Angeles. Les deux meurtres ont longtemps été considérés comme non élucidés."],
+  ]},
+  { id: "fr", name: "Chanson & pop française", sub: "De Piaf à la French Touch", qs: [
+    ["Quel était le surnom d'Édith Piaf à ses débuts ?", ["La Môme", "La Grande Dame", "La Voix de Paris", "La Petite Princesse"], "Louis Leplée, patron de cabaret, la découvre en 1935 chantant dans la rue et la baptise « la Môme Piaf ». En argot, un piaf est un moineau."],
+    ["Quelle chanson française devient « My Way » de Frank Sinatra ?", ["Comme d'habitude", "La Mer", "Ne me quitte pas", "Les Feuilles mortes"], "Créée par Claude François en 1967. Paul Anka écrit des paroles anglaises sans rapport avec l'original, qui parle d'un couple usé."],
+    ["Quelle chanson de Gainsbourg et Birkin est condamnée par le journal du Vatican en 1969 ?", ["Je t'aime… moi non plus", "La Décadanse", "Jane B.", "69 année érotique"], "Interdite à la radio dans plusieurs pays, elle est quand même n°1 au Royaume-Uni. Gainsbourg l'avait d'abord enregistrée avec Brigitte Bardot."],
+    ["Quel était le vrai nom de Johnny Hallyday ?", ["Jean-Philippe Smet", "Jean-Pierre Hallier", "Jacques Dutronc", "Jean-Claude Hallet"], "Son nom de scène vient de Lee Halliday, le mari américain de sa cousine, qui l'a initié au spectacle."],
+    ["Quelle était la nationalité de Jacques Brel ?", ["Belge", "Français", "Suisse", "Canadien"], "Né à Bruxelles en 1929. Il arrête la scène en 1966 au sommet de sa carrière et finit sa vie aux îles Marquises."],
+    ["Pour quel pays France Gall gagne-t-elle l'Eurovision en 1965 ?", ["Le Luxembourg", "La France", "Monaco", "La Belgique"], "Avec « Poupée de cire, poupée de son », écrite par Serge Gainsbourg. Elle avait 17 ans."],
+    ["Qui chante « La Bohème » en 1965 ?", ["Charles Aznavour", "Gilbert Bécaud", "Jean Ferrat", "Georges Brassens"], "Aznavour, né Shahnour Varinag Aznavourian, a écrit plus de 1 000 chansons et chanté en plusieurs langues."],
+    ["Qui était le chanteur et guitariste du groupe Téléphone ?", ["Jean-Louis Aubert", "Louis Bertignac", "Bernard Lavilliers", "Daniel Darc"], "Formé en 1976, Téléphone est le plus grand groupe de rock français de son époque. Louis Bertignac était l'autre guitariste."],
+    ["Qui est le chanteur d'Indochine ?", ["Nicola Sirkis", "Jean-Louis Aubert", "Étienne Daho", "Daniel Balavoine"], "Le groupe se forme en 1981. « L'Aventurier », inspiré de la BD Bob Morane, en fait des stars dès 1982."],
+    ["Quelle date a été choisie pour la Fête de la musique, créée en 1982 ?", ["Le 21 juin", "Le 14 juillet", "Le 1er mai", "Le 21 mars"], "Le jour du solstice d'été. Lancée par Jack Lang et Maurice Fleuret, elle est aujourd'hui fêtée dans plus de 120 pays."],
+    ["Quelle émission de radio lance la vague yé-yé en 1959 ?", ["Salut les copains", "Âge tendre et tête de bois", "Le Pop Club", "Les Grosses Têtes"], "Diffusée sur Europe 1 en fin d'après-midi, à la sortie des cours. Un magazine du même nom suit en 1962."],
+    ["De quelle ville viennent les groupes Air et Phoenix ?", ["Versailles", "Bordeaux", "Lyon", "Nantes"], "Le premier album d'Air, Moon Safari (1998), est l'un des emblèmes de la « French Touch » avec Daft Punk."],
+  ]},
+];
+
+// Anecdotes rock : année, artiste, titre, texte
+const ANEC = [
+  [1956, "Elvis Presley", "Jamais joué en Europe", "Elvis n'a jamais donné de concert hors d'Amérique du Nord. Son manager, le « Colonel » Tom Parker, était en réalité un immigré néerlandais sans papiers. Il n'avait pas de passeport et craignait de ne pas pouvoir rentrer aux États-Unis."],
+  [1964, "The Who", "La première guitare cassée", "Au Railway Hotel de Londres, Pete Townshend heurte par accident le plafond bas avec le manche de sa guitare, qui se brise. Le public rit. Pour sauver la face, il finit de la détruire. C'est devenu le rituel de fin de concert du groupe."],
+  [1964, "The Beatles", "73 millions de téléspectateurs", "Le 9 février 1964, environ 73 millions d'Américains regardent les Beatles au Ed Sullivan Show. Selon une légende tenace, aucun cambriolage n'a été signalé à New York pendant la diffusion."],
+  [1965, "The Rolling Stones", "Le riff venu en dormant", "Keith Richards se réveille en pleine nuit avec le riff de « Satisfaction » en tête. Il l'enregistre sur un magnétophone et se rendort. Le lendemain, la cassette contient deux minutes de guitare, puis environ quarante minutes de ronflements."],
+  [1965, "The Beatles", "Des œufs brouillés", "Paul McCartney compose la mélodie de « Yesterday » en rêve. Persuadé de l'avoir entendue ailleurs, il la fait écouter à tout le monde pendant des semaines. En attendant les paroles, la chanson s'appelle « Scrambled Eggs »."],
+  [1967, "The Velvet Underground", "La banane à peler", "La pochette du premier album du Velvet Underground, signée Andy Warhol, montre une banane autocollante. Sur les premiers pressages, on pouvait la décoller pour découvrir une banane couleur chair."],
+  [1967, "Jimi Hendrix", "La guitare en feu", "Au festival de Monterey, Hendrix asperge sa Stratocaster d'essence à briquet, s'agenouille et y met le feu. C'était son premier grand concert aux États-Unis. Il s'agissait aussi de surpasser les Who, qui jouaient juste avant."],
+  [1967, "The Doors", "Interdits d'antenne", "Le Ed Sullivan Show demande aux Doors de remplacer « girl, we couldn't get much higher » dans « Light My Fire », une allusion à la drogue. Jim Morrison chante la phrase originale en direct. Le groupe n'est jamais réinvité."],
+  [1967, "The Who", "La batterie explosive", "Pour leur passage dans une émission télévisée américaine, Keith Moon bourre sa grosse caisse d'explosifs, bien plus que prévu. La détonation brûle les cheveux de Pete Townshend et aurait aggravé ses problèmes d'audition."],
+  [1968, "The Beatles", "La batterie fleurie", "Pendant l'enregistrement du White Album, Ringo Starr, qui se sent exclu, quitte le groupe et part en Sardaigne. Deux semaines plus tard, il revient et trouve sa batterie couverte de fleurs."],
+  [1968, "Led Zeppelin", "Le ballon de plomb", "Le nom viendrait d'une plaisanterie de Keith Moon ou de John Entwistle, des Who : le groupe allait couler « comme un ballon de plomb » (« lead balloon »). Jimmy Page a gardé l'idée et changé l'orthographe en « Led » pour qu'on ne prononce pas « lide »."],
+  [1968, "Johnny Cash", "Concert en prison", "Johnny Cash enregistre un album live à la prison de Folsom devant les détenus. Il n'a jamais été incarcéré lui-même, malgré sa réputation. L'album relance sa carrière."],
+  [1969, "The Beatles", "Le concert sur le toit", "Le 30 janvier 1969, les Beatles jouent sur le toit de leur siège, au 3 Savile Row à Londres. C'est leur dernier concert public. La police l'interrompt après environ 42 minutes à cause des plaintes pour le bruit."],
+  [1969, "David Bowie", "Une chanson en orbite", "« Space Oddity » sort quelques jours avant le lancement d'Apollo 11 et la BBC la diffuse pendant sa couverture de la mission. En 2013, l'astronaute Chris Hadfield l'enregistre dans la Station spatiale internationale."],
+  [1969, "The Rolling Stones", "Altamont", "Pour leur concert gratuit en Californie, les Stones confient la sécurité aux Hells Angels, payés en bière. La soirée tourne au drame : un spectateur est tué devant la scène. Pour beaucoup, Altamont marque la fin du rêve hippie."],
+  [1970, "Black Sabbath", "Des doigts en plastique", "Adolescent, Tony Iommi perd le bout de deux doigts dans un accident d'usine. Il se fabrique des prothèses avec du plastique fondu et détend ses cordes pour souffrir moins. Ce son plus grave et plus lourd a donné naissance au heavy metal."],
+  [1970, "Black Sabbath", "Un vendredi 13", "Le premier album de Black Sabbath sort le vendredi 13 février 1970. Le jour a été choisi exprès pour son image sombre."],
+  [1970, "The Rolling Stones", "La langue à 50 livres", "Le logo de la langue des Stones est dessiné en 1970 par John Pasche, un étudiant en art. Il est payé 50 livres, puis reçoit un bonus de 200 livres. Il a revendu le dessin original au Victoria and Albert Museum en 2008."],
+  [1971, "Deep Purple", "Le feu à Montreux", "Deep Purple vient enregistrer au casino de Montreux. Pendant un concert de Frank Zappa la veille, une fusée éclairante met le feu au bâtiment. La fumée sur le lac Léman donne « Smoke on the Water ». Le « Funky Claude » des paroles est Claude Nobs, fondateur du Montreux Jazz Festival."],
+  [1973, "AC/DC", "Une machine à coudre", "Margaret, la sœur de Malcolm et Angus Young, voit « AC/DC » écrit sur sa machine à coudre (courant alternatif / continu). C'est aussi elle qui propose à Angus son uniforme d'écolier pour la scène."],
+  [1974, "Queen", "Un logo fait maison", "Freddie Mercury, diplômé en graphisme, dessine lui-même le blason de Queen. On y voit les signes astrologiques des quatre membres : deux lions, un crabe et deux fées."],
+  [1974, "Queen", "La Red Special", "Brian May a construit sa guitare, la Red Special, avec son père quand il était adolescent. Le manche est taillé dans le bois d'une vieille cheminée. Il joue avec une pièce de six pence au lieu d'un médiator."],
+  [1975, "Queen", "14 fois en deux jours", "La maison de disques trouve « Bohemian Rhapsody » trop longue pour la radio. Freddie Mercury donne une copie à son ami DJ Kenny Everett, qui « ne doit pas la passer ». Il la diffuse 14 fois en deux jours."],
+  [1976, "Pink Floyd", "Le cochon volant", "Pour la pochette d'Animals, le groupe fait gonfler un cochon de 12 mètres au-dessus de la centrale de Battersea. Le câble casse et le cochon s'envole dans l'espace aérien d'Heathrow. Il atterrit finalement dans un champ du Kent."],
+  [1976, "Ramones", "De faux frères", "Les Ramones ne sont pas frères. Ils ont tous pris le même nom de famille, inspiré par Paul McCartney qui s'inscrivait dans les hôtels sous le pseudonyme de « Paul Ramon »."],
+  [1977, "Sex Pistols", "La péniche du Jubilé", "Le 7 juin 1977, pendant le Jubilé de la reine, les Sex Pistols jouent « God Save the Queen » sur une péniche qui descend la Tamise. La police fait accoster le bateau et arrête plusieurs personnes, dont Malcolm McLaren."],
+  [1977, "Chuck Berry", "Hors du système solaire", "« Johnny B. Goode » figure sur le disque d'or embarqué à bord des sondes Voyager, lancées en 1977. C'est la seule chanson rock du disque. Voyager 1 a quitté le système solaire en 2012."],
+  [1978, "Van Halen", "Les M&M's marron", "Le contrat de tournée de Van Halen exigeait un bol de M&M's sans aucun bonbon marron. Ce n'était pas un caprice : si les M&M's marron étaient là, le groupe savait que l'organisateur n'avait pas lu le contrat en détail, y compris les règles de sécurité de la scène."],
+  [1979, "The Clash", "La basse fracassée", "La pochette de London Calling montre Paul Simonon qui brise sa basse sur scène à New York. Il était frustré que le public reste assis. Le lettrage rose et vert reprend celui du premier album d'Elvis Presley."],
+  [1982, "Ozzy Osbourne", "La chauve-souris", "Lors d'un concert à Des Moines, un spectateur jette une chauve-souris sur scène. Ozzy, persuadé qu'elle est en caoutchouc, la mord. Elle était bien réelle, et il a dû se faire vacciner contre la rage."],
+  [1984, "Def Leppard", "Le batteur à un bras", "Le soir du 31 décembre 1984, le batteur Rick Allen perd le bras gauche dans un accident de voiture. Le groupe l'attend. Il revient avec une batterie électronique adaptée, qu'il commande avec les pieds."],
+  [1985, "Queen", "20 minutes à Wembley", "Queen joue environ 20 minutes au Live Aid. Le groupe avait répété son court set pendant une semaine. Le « Ay-oh » que Freddie Mercury lance à la foule est devenu un moment légendaire."],
+  [1990, "Roger Waters", "Le Mur à Berlin", "En juillet 1990, Roger Waters joue The Wall à Berlin, sur le no man's land de la Potsdamer Platz, quelques mois après la chute du vrai mur. Plusieurs centaines de milliers de personnes y assistent."],
+  [1991, "Nirvana", "Un déodorant", "Kathleen Hanna, du groupe Bikini Kill, écrit sur un mur de Kurt Cobain : « Kurt smells like Teen Spirit ». Il y voit un slogan rebelle. Il ignorait que Teen Spirit était une marque de déodorant que portait sa petite amie."],
+  [1993, "Nirvana", "Des lys et des bougies", "Pour le MTV Unplugged de Nirvana, Kurt Cobain demande un décor de lys et de bougies, comme pour des funérailles. Le concert est enregistré en une seule prise, cinq mois avant sa mort."],
+  [1967, "Lemmy (Motörhead)", "Roadie de Hendrix", "Avant de fonder Motörhead, Lemmy Kilmister a été roadie de Jimi Hendrix à la fin des années 60. Il a aussi été bassiste du groupe Hawkwind, qui l'a renvoyé en 1975."],
+  [2007, "Radiohead", "Payez ce que vous voulez", "Radiohead sort In Rainbows en téléchargement, au prix choisi par chaque acheteur, même zéro. L'idée a été très commentée dans l'industrie du disque."],
+  [2007, "Queen", "Docteur May", "Brian May abandonne sa thèse d'astrophysique en 1974 pour Queen. Il la termine en 2007, plus de 30 ans plus tard, sur la poussière zodiacale."],
+  [2013, "Metallica", "Concert en Antarctique", "Metallica joue en Antarctique en décembre 2013 pour des scientifiques et des gagnants d'un concours. Pour ne pas perturber l'environnement, le public écoute au casque. Le groupe devient le premier à jouer sur les sept continents la même année."],
+  [2014, "U2", "L'album imposé", "Apple installe automatiquement l'album Songs of Innocence de U2 dans environ 500 millions de comptes iTunes. Beaucoup d'utilisateurs le prennent mal, et Apple doit publier un outil pour le supprimer."],
+  [2016, "Bob Dylan", "Un Nobel absent", "Bob Dylan reçoit le prix Nobel de littérature. Il ne se manifeste pas pendant deux semaines et ne va pas à la cérémonie. Il récupère la médaille plus tard en privé et envoie un discours enregistré."],
+];
+ANEC.push(...(window.ANEC_PLUS || []));
+ANEC.sort((a, b) => a[0] - b[0]);
+const DECADES = [["all", "Toutes"], ["50", "50s–60s"], ["70", "70s"], ["80", "80s–90s"], ["00", "2000+"]];
+function decadeOf(y) { return y < 1970 ? "50" : y < 1980 ? "70" : y < 2000 ? "80" : "00"; }
+
+// Index des questions
+const ALL = [];
+CATS.forEach((c, ci) => c.qs.forEach((q, i) => ALL.push({ id: c.id + i, cat: c, q: q[0], opts: q[1], expl: q[2], right: q[1][0] })));
+const VL_CAT = { name: "Vrai ou légende" };
+const VLITEMS = (window.VL || []).map((x, i) => ({ id: "vl" + i, vl: true, v: x[0], cat: VL_CAT, q: x[1], expl: x[2], right: x[0] ? "Vrai" : "Légende" }));
+const BY_ID = Object.fromEntries(ALL.concat(VLITEMS).map(x => [x.id, x]));
+const QUIZ_LEN = 10;
+const VL_LEN = 16;
+
+// Persistance locale
+const KEY = "setlist-v1";
+function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+let S = Object.assign({ p: {}, read: [], tab: "quiz" }, load());
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+const prog = id => S.p[id] || { box: 0, seen: 0, ok: 0, lastOk: null };
+const mastered = id => prog(id).box >= 2;
+const toReview = () => ALL.filter(x => prog(x.id).lastOk === false);
+
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function pick(pool, n) { return shuffle(pool).sort((a, b) => prog(a.id).box - prog(b.id).box).slice(0, n).map(x => x.id); }
+
+const app = document.getElementById("app");
+let Q = null;
+let A = { dec: "all", i: 0 };
+
+function header() {
+  return `
+    <header class="masthead">
+      <div>
+        <h1>Set<span>list</span></h1>
+        <p>${ALL.length} questions · ${VLITEMS.length} affirmations vrai ou légende · ${ANEC.length} anecdotes rock</p>
+      </div>
+    </header>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-quiz" aria-selected="${S.tab === "quiz"}">Quiz</button>
+      <button class="tab" role="tab" id="tab-vl" aria-selected="${S.tab === "vl"}">Vrai ou légende</button>
+      <button class="tab" role="tab" id="tab-anec" aria-selected="${S.tab === "anec"}">Coulisses<small class="num">${S.read.length}/${ANEC.length}</small></button>
+    </nav>`;
+}
+function bindTabs() {
+  document.getElementById("tab-quiz").onclick = () => { S.tab = "quiz"; save(); renderHome(); };
+  document.getElementById("tab-anec").onclick = () => { S.tab = "anec"; save(); renderHome(); };
+  document.getElementById("tab-vl").onclick = () => { S.tab = "vl"; save(); renderHome(); };
+}
+
+function renderHome() {
+  Q = null;
+  if (S.tab === "anec") return renderAnec();
+  if (S.tab === "vl") return renderVLHome();
+  const seen = ALL.filter(x => prog(x.id).seen > 0);
+  const tS = seen.reduce((s, x) => s + prog(x.id).seen, 0);
+  const tO = seen.reduce((s, x) => s + prog(x.id).ok, 0);
+  const rate = tS ? Math.round(100 * tO / tS) + "%" : "–";
+  const nM = ALL.filter(x => mastered(x.id)).length;
+  const rev = toReview().length;
+
+  app.innerHTML = header() + `
+    <section class="stats" aria-label="Ta progression">
+      <div class="stat"><b class="num">${nM}<small> / ${ALL.length}</small></b><span>questions maîtrisées</span></div>
+      <div class="stat"><b class="num">${rate}</b><span>de bonnes réponses</span></div>
+      <div class="stat"><b class="num">${rev}</b><span>à revoir</span></div>
+    </section>
+    <div class="actions">
+      <button class="btn btn-primary" id="go-mix">Quiz mélangé · ${QUIZ_LEN} pistes</button>
+      <button class="btn btn-ghost" id="go-rev" ${rev ? "" : "disabled"}>Revoir mes erreurs ${rev ? `<span class="tag num">${rev}</span>` : ""}</button>
+    </div>
+    <section style="display:flex;flex-direction:column;gap:10px">
+      <div class="eyebrow">La tracklist · un thème = 12 questions</div>
+      <ol class="tracklist">
+        ${CATS.map((c, ci) => {
+          const m = c.qs.filter((_, i) => mastered(c.id + i)).length;
+          const bars = c.qs.map((_, i) => `<i class="${mastered(c.id + i) ? "on" : ""}" style="height:${30 + ((i * 37) % 70)}%"></i>`).join("");
+          return `<li><button class="track" data-cat="${c.id}">
+            <span class="no num">${String(ci + 1).padStart(2, "0")}</span>
+            <span><div class="nm">${c.name}</div><div class="sub">${c.sub}</div></span>
+            <span><div class="meter" aria-hidden="true">${bars}</div><div class="cnt num">${m}/${c.qs.length}</div></span>
+          </button></li>`;
+        }).join("")}
+      </ol>
+    </section>
+    <button class="reset" id="reset">Remettre ma progression à zéro</button>`;
+  bindTabs();
+  document.getElementById("go-mix").onclick = () => start(pick(ALL, QUIZ_LEN), "Quiz mélangé");
+  document.getElementById("go-rev").onclick = () => start(shuffle(toReview().map(x => x.id)).slice(0, QUIZ_LEN), "Révision");
+  app.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => {
+    const c = CATS.find(c => c.id === b.dataset.cat);
+    start(pick(ALL.filter(x => x.cat === c), c.qs.length), c.name);
+  });
+  const r = document.getElementById("reset");
+  r.onclick = () => {
+    if (r.dataset.armed) { S = { p: {}, read: [], tab: "quiz" }; save(); renderHome(); return; }
+    r.dataset.armed = "1"; r.textContent = "Cliquer encore pour confirmer l'effacement";
+  };
+}
+
+// --- Coulisses ---
+function anecList() { return ANEC.filter(a => A.dec === "all" || decadeOf(a[0]) === A.dec); }
+function renderAnec() {
+  const list = anecList();
+  if (A.i >= list.length) A.i = 0;
+  const a = list[A.i];
+  const key = a[0] + a[2];
+  if (!S.read.includes(key)) { S.read.push(key); save(); }
+  app.innerHTML = header() + `
+    <div class="filters" role="group" aria-label="Filtrer par époque">
+      ${DECADES.map(([k, l]) => `<button class="chip" data-dec="${k}" aria-pressed="${A.dec === k}">${l}</button>`).join("")}
+    </div>
+    <article class="anec" aria-live="polite">
+      <span class="yr num" aria-hidden="true">${a[0]}</span>
+      <div class="meta"><span class="artist">${a[1]}</span><span class="hint num">${a[0]}</span></div>
+      <h2>${a[2]}</h2>
+      <p>${a[3]}</p>
+    </article>
+    <div class="anec-nav">
+      <div class="grp">
+        <button class="btn btn-ghost" id="prev" aria-label="Anecdote précédente">←</button>
+        <button class="btn btn-ghost" id="nxt" aria-label="Anecdote suivante">→</button>
+        <button class="btn btn-primary" id="rnd">Au hasard</button>
+      </div>
+      <span class="seen-note num">${A.i + 1} / ${list.length} · ${S.read.length} découvertes sur ${ANEC.length}</span>
+    </div>
+    <p class="hint">Raccourcis : <kbd>←</kbd> <kbd>→</kbd> pour naviguer, <kbd>R</kbd> pour une anecdote au hasard.</p>`;
+  bindTabs();
+  app.querySelectorAll("[data-dec]").forEach(b => b.onclick = () => { A.dec = b.dataset.dec; A.i = 0; renderAnec(); });
+  document.getElementById("prev").onclick = () => moveAnec(-1);
+  document.getElementById("nxt").onclick = () => moveAnec(1);
+  document.getElementById("rnd").onclick = randAnec;
+}
+function moveAnec(d) { const n = anecList().length; A.i = (A.i + d + n) % n; renderAnec(); }
+function randAnec() {
+  const list = anecList();
+  const unread = list.map((a, i) => [a, i]).filter(([a]) => !S.read.includes(a[0] + a[2]));
+  const pool = unread.length ? unread : list.map((a, i) => [a, i]).filter(([, i]) => i !== A.i);
+  A.i = pool[Math.floor(Math.random() * pool.length)][1];
+  renderAnec();
+}
+
+// --- Vrai ou légende ---
+const vlReview = () => VLITEMS.filter(x => prog(x.id).lastOk === false);
+// Série équilibrée : moitié vraies, moitié légendes, pour qu'on ne puisse pas répondre au hasard
+function pickVL(n) {
+  const t = VLITEMS.filter(x => x.v === 1), f = VLITEMS.filter(x => x.v === 0);
+  const nf = Math.ceil(n / 2) - (Math.random() < .5 ? 1 : 0);
+  return shuffle(pick(f, nf).concat(pick(t, n - nf)));
+}
+function startVL() { start(pickVL(VL_LEN), "Vrai ou légende", "vl"); }
+
+function renderVLHome() {
+  const seen = VLITEMS.filter(x => prog(x.id).seen > 0);
+  const tS = seen.reduce((s, x) => s + prog(x.id).seen, 0);
+  const tO = seen.reduce((s, x) => s + prog(x.id).ok, 0);
+  const rate = tS ? Math.round(100 * tO / tS) + "%" : "–";
+  const nM = VLITEMS.filter(x => mastered(x.id)).length;
+  const rev = vlReview().length;
+  app.innerHTML = header() + `
+    <section class="stats" aria-label="Ta progression">
+      <div class="stat"><b class="num">${seen.length}<small> / ${VLITEMS.length}</small></b><span>affirmations vues</span></div>
+      <div class="stat"><b class="num">${rate}</b><span>de bonnes réponses</span></div>
+      <div class="stat"><b class="num">${nM}</b><span>maîtrisées</span></div>
+    </section>
+    <div class="vl-intro">
+      <p>Une affirmation sur l'histoire de la musique. Elle est vraie, ou c'est une légende, une idée reçue ou un faux souvenir. Chaque série compte ${VL_LEN} affirmations, à peu près moitié vraies, moitié fausses.</p>
+      <div class="bar" aria-hidden="true"><i style="width:${100 * seen.length / VLITEMS.length}%"></i></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="go-vl">Lancer une série de ${VL_LEN}</button>
+      <button class="btn btn-ghost" id="go-vlrev" ${rev ? "" : "disabled"}>Revoir mes erreurs ${rev ? `<span class="tag num">${rev}</span>` : ""}</button>
+    </div>`;
+  bindTabs();
+  document.getElementById("go-vl").onclick = startVL;
+  document.getElementById("go-vlrev").onclick = () => start(shuffle(vlReview().map(x => x.id)).slice(0, VL_LEN), "Révision vrai ou légende", "vl");
+}
+
+// --- Quiz ---
+function start(ids, label, mode = "quiz") { Q = { ids, label, mode, i: 0, results: [], answered: false, order: null }; renderQuestion(); }
+
+function renderQuestion() {
+  const item = BY_ID[Q.ids[Q.i]];
+  Q.answered = false;
+  Q.order = item.vl
+    ? [{ t: "Vrai", ok: item.v === 1 }, { t: "Légende", ok: item.v === 0 }]
+    : shuffle(item.opts.map((t, k) => ({ t, ok: k === 0 })));
+  const keys = item.vl ? "VL" : "ABCD";
+  app.innerHTML = `
+    <div class="qtop">
+      <button class="quit" id="quit">← Accueil</button>
+      <div class="progress" aria-label="Question ${Q.i + 1} sur ${Q.ids.length}">
+        ${Q.ids.map((_, k) => `<i class="${k < Q.i ? (Q.results[k].ok ? "ok" : "ko") : k === Q.i ? "cur" : ""}"></i>`).join("")}
+      </div>
+      <span class="num hint">${Q.i + 1}/${Q.ids.length}</span>
+    </div>
+    <article class="qcard">
+      <div class="qhead"><span class="piste num">Piste ${Q.i + 1}</span><span class="theme">${item.cat.name}</span></div>
+      <h2 class="qtext${item.vl ? " qtext-vl" : ""}">${item.vl ? "« " + item.q + " »" : item.q}</h2>
+      <div class="opts${item.vl ? " opts-vl" : ""}">
+        ${Q.order.map((o, k) => `<button class="opt" id="opt-${k}" data-k="${k}"><span class="k">${keys[k]}</span><span>${o.t}</span></button>`).join("")}
+      </div>
+      <div id="after"></div>
+    </article>
+    <p class="hint">Raccourcis : ${item.vl ? "<kbd>V</kbd> vrai, <kbd>L</kbd> légende" : "<kbd>A</kbd>–<kbd>D</kbd> ou <kbd>1</kbd>–<kbd>4</kbd> pour répondre"}, <kbd>Entrée</kbd> pour continuer.</p>`;
+  document.getElementById("quit").onclick = renderHome;
+  app.querySelectorAll(".opt").forEach(b => b.onclick = () => answer(+b.dataset.k));
+}
+
+function answer(k) {
+  if (Q.answered) return;
+  Q.answered = true;
+  const item = BY_ID[Q.ids[Q.i]];
+  const ok = Q.order[k].ok;
+  Q.results.push({ id: item.id, ok, given: Q.order[k].t });
+  const p = prog(item.id);
+  p.seen++; if (ok) p.ok++;
+  p.box = ok ? Math.min(4, p.box + 1) : 0;
+  p.lastOk = ok;
+  S.p[item.id] = p; save();
+  app.querySelectorAll(".opt").forEach((b, j) => {
+    b.disabled = true;
+    if (Q.order[j].ok) b.classList.add("right");
+    else if (j === k) b.classList.add("wrong");
+    else b.classList.add("dim");
+  });
+  const last = Q.i === Q.ids.length - 1;
+  document.getElementById("after").innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="expl">
+        <span class="verdict ${ok ? "ok" : "ko"}">${item.vl
+          ? (ok ? "Bien vu : " : "Raté : ") + (item.v ? "c'est vrai." : "c'est une légende.")
+          : (ok ? "Bonne réponse." : "Raté : c'était « " + item.right + " ».")}</span>
+        <p>${item.expl}</p>
+      </div>
+      <div><button class="btn btn-primary" id="next">${last ? "Voir mon score" : item.vl ? "Affirmation suivante" : "Piste suivante"} →</button></div>
+    </div>`;
+  const nb = document.getElementById("next");
+  nb.onclick = next; nb.focus({ preventScroll: true });
+}
+
+function next() {
+  if (!Q || !Q.answered) return;
+  if (Q.i < Q.ids.length - 1) { Q.i++; renderQuestion(); window.scrollTo({ top: 0 }); }
+  else finish();
+}
+
+function finish() {
+  const n = Q.results.filter(r => r.ok).length, tot = Q.results.length, ratio = n / tot;
+  const msg = ratio === 1 ? "Sans fausse note. Rappel !"
+    : ratio >= .7 ? "Très bon set. Les questions ratées t'attendent dans « Revoir mes erreurs »."
+    : ratio >= .4 ? "Pas mal. Relis les explications, elles reviendront."
+    : "Première répétition. Refais un tour, ça rentre vite.";
+  app.innerHTML = `
+    <div class="qtop"><span class="eyebrow">${Q.label} terminé</span></div>
+    <div class="score"><b class="num">${n}/${tot}</b><span>bonnes réponses</span></div>
+    <p class="verdict-line">${msg}</p>
+    <div class="actions">
+      <button class="btn btn-primary" id="again">Nouveau quiz</button>
+      <button class="btn btn-ghost" id="home">Retour à l'accueil</button>
+    </div>
+    <ul class="recap">
+      ${Q.results.map(r => {
+        const it = BY_ID[r.id];
+        return `<li><span class="m ${r.ok ? "ok" : "ko"}">${r.ok ? "✓" : "✗"}</span><div><div class="q">${it.q}</div><div class="a">${r.ok ? it.right : `Ta réponse : ${r.given} · Bonne réponse : <strong>${it.right}</strong>`}</div></div></li>`;
+      }).join("")}
+    </ul>`;
+  const mode = Q.mode;
+  Q = null;
+  document.getElementById("again").onclick = () => mode === "vl" ? startVL() : start(pick(ALL, QUIZ_LEN), "Quiz mélangé");
+  document.getElementById("home").onclick = renderHome;
+  window.scrollTo({ top: 0 });
+}
+
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const key = e.key.toLowerCase();
+  if (Q) {
+    const map = BY_ID[Q.ids[Q.i]].vl
+      ? { v: 0, l: 1, "1": 0, "2": 1 }
+      : { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
+    if (!Q.answered && key in map) { e.preventDefault(); answer(map[key]); }
+    else if (Q.answered && key === "enter" && document.activeElement?.id !== "next") { e.preventDefault(); next(); }
+  } else if (S.tab === "anec") {
+    if (key === "arrowright") moveAnec(1);
+    else if (key === "arrowleft") moveAnec(-1);
+    else if (key === "r") randAnec();
+  }
+});
+
+renderHome();
+</script>
+
+</html>
