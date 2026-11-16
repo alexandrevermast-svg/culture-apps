@@ -635,6 +635,8 @@ function finish() {
 }
 
 document.addEventListener("keydown", e => {
+  // Ne jamais réagir quand on écrit dans un champ (email, mot de passe…)
+  if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const key = e.key.toLowerCase();
   if (Q) {
