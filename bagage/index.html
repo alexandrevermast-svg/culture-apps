@@ -149,6 +149,14 @@ kbd { font-family: var(--ui); border: 1px solid var(--line); border-bottom-width
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="../sync-config.js"></script>
 <script src="../sync.js"></script>
+<script src="q-hist.js"></script>
+<script src="q-geo.js"></script>
+<script src="q-sci.js"></script>
+<script src="q-arts.js"></script>
+<script src="q-mus.js"></script>
+<script src="q-cine.js"></script>
+<script src="q-sport.js"></script>
+<script src="q-lang.js"></script>
 <script>
 // Chaque question : [énoncé, [bonne réponse, leurre, leurre, leurre], explication]
 const CATS = [
@@ -235,6 +243,8 @@ const CATS = [
 ];
 
 // Index des questions
+// Questions supplémentaires chargées depuis q-*.js (ajoutées à la suite : les numéros existants ne changent pas)
+CATS.forEach(c => c.qs.push(...((window.BAGAGE_PLUS || {})[c.id] || [])));
 const ALL = [];
 CATS.forEach(c => c.qs.forEach((q, i) => ALL.push({ id: c.id + i, cat: c, q: q[0], opts: q[1], expl: q[2] })));
 const BY_ID = Object.fromEntries(ALL.map(x => [x.id, x]));
@@ -330,7 +340,7 @@ function renderHome() {
   document.getElementById("go-rev").onclick = () => start(shuffle(toReview().map(x => x.id)).slice(0, QUIZ_LEN), "Révision");
   app.querySelectorAll("[data-cat]").forEach(b => b.onclick = () => {
     const c = CATS.find(c => c.id === b.dataset.cat);
-    start(pick(ALL.filter(x => x.cat === c), c.qs.length), c.name);
+    start(pick(ALL.filter(x => x.cat === c), QUIZ_LEN), c.name);
   });
   const r = document.getElementById("reset");
   r.onclick = () => {
